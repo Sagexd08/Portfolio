@@ -349,7 +349,7 @@ export default function Explorations() {
               <div key={i} className="exploration-card-wrapper">
                 <TiltCard rotateDir={1} index={i}>
                   <div
-                    className="exploration-card aspect-[4/5] relative overflow-hidden rounded-xl grayscale hover:grayscale-0 transition-[filter,box-shadow] duration-700 cursor-pointer"
+                    className="exploration-card aspect-[4/5] relative overflow-hidden rounded-xl grayscale transition-[box-shadow] duration-700 cursor-pointer"
                     style={{
                       boxShadow: activeCard === i
                         ? '0 0 40px 4px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.5)'
@@ -389,7 +389,7 @@ export default function Explorations() {
               <div key={i} className="exploration-card-wrapper">
                 <TiltCard rotateDir={-1} index={i + 3}>
                   <div
-                    className="exploration-card aspect-[4/5] relative overflow-hidden rounded-xl grayscale hover:grayscale-0 transition-[filter,box-shadow] duration-700 cursor-pointer"
+                    className="exploration-card aspect-[4/5] relative overflow-hidden rounded-xl grayscale transition-[box-shadow] duration-700 cursor-pointer"
                     style={{
                       boxShadow: activeCard === i + 3
                         ? '0 0 40px 4px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.5)'
