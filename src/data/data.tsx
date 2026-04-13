@@ -37,7 +37,7 @@ export const profile = {
   github: 'https://github.com/Sagexd08',
   linkedin: 'https://www.linkedin.com/in/sohom-chatterjee-61828a312/',
   email: 'sohomchatterjee07@oxifylabs.app',
-  avatarUrl: 'https://avatars.githubusercontent.com/u/122352413?v=4',
+  avatarUrl: '/Sohom.jpg',
   stats: {
     repos: 51,
     projects: '20+',

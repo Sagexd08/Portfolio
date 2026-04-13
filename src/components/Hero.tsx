@@ -10,8 +10,14 @@ const ROLES = ['Creative', 'Fullstack Developer', 'AI/ML Researcher', 'Founder @
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const scrollLineRef = useRef<HTMLDivElement>(null);
   const [roleIndex, setRoleIndex] = useState(0);
+
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   // GSAP Entrance
   useEffect(() => {
@@ -88,29 +94,42 @@ export default function Hero() {
       {/* Main Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-6 text-center">
         <div className="blur-in text-xs text-muted uppercase tracking-[0.3em] mb-8">
-          COLLECTION '26
+          COMPUTER SCIENCE CLASS OF '28
+        </div>
+
+        <div className="blur-in inline-flex items-center gap-3 mb-6 px-3 py-1.5 rounded-full border border-white/10 bg-surface/40 backdrop-blur-md">
+          <img
+            src={profile.avatarUrl}
+            alt={`${profile.name} profile`}
+            className="w-7 h-7 rounded-full object-cover border border-white/20"
+            loading="eager"
+            decoding="async"
+          />
+          <span className="text-[11px] text-muted uppercase tracking-[0.18em]">{profile.location}</span>
         </div>
 
         <h1 className="name-reveal text-6xl md:text-8xl lg:text-9xl font-display-italic leading-[0.9] tracking-tight text-text-primary mb-6">
           {profile.name}
         </h1>
 
-        <div className="blur-in text-lg md:text-2xl text-text-primary/90 font-light mb-8 flex items-center justify-center gap-1.5 leading-none">
-          <span>A </span>
-          <div className="relative inline-flex items-center justify-center min-w-[120px] md:min-w-[200px] h-8 overflow-hidden">
+        <div className="blur-in text-lg md:text-2xl text-text-primary/90 font-light mb-8 flex items-center justify-center gap-2 leading-none">
+          <span className="shrink-0">A</span>
+          <div className="relative h-8 md:h-9 overflow-hidden">
+            <span className="invisible font-display-italic italic whitespace-nowrap">
+              {ROLES.reduce((a, b) => (a.length >= b.length ? a : b))}
+            </span>
             <AnimatePresence mode="wait">
               <motion.span
                 key={ROLES[roleIndex]}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -12 }}
-                className="absolute font-display-italic text-text-primary italic whitespace-nowrap"
+                className="absolute inset-0 flex items-center font-display-italic text-text-primary italic whitespace-nowrap"
               >
                 {ROLES[roleIndex]}
               </motion.span>
             </AnimatePresence>
           </div>
-          <span> lives in Kolkata.</span>
         </div>
 
         <p className="blur-in text-sm md:text-base text-muted max-w-md mb-12 text-balance lg:px-4">
@@ -120,14 +139,22 @@ export default function Hero() {
         {/* CTA Buttons */}
         <div className="blur-in flex flex-col sm:flex-row items-center gap-4">
           <Magnetic strength={0.2}>
-            <button className="relative group px-10 py-4 rounded-full bg-text-primary text-bg font-medium text-sm transition-all duration-300 hover:scale-105 overflow-hidden">
+            <button
+              type="button"
+              onClick={() => scrollToSection('projects')}
+              className="relative group px-10 py-4 rounded-full bg-text-primary text-bg font-medium text-sm transition-all duration-300 hover:scale-105 overflow-hidden"
+            >
               <span className="absolute inset-0 bg-bg opacity-0 group-hover:opacity-10 transition-opacity" />
               See Works
             </button>
           </Magnetic>
 
           <Magnetic strength={0.2}>
-            <button className="relative group px-10 py-4 rounded-full border-2 border-stroke bg-bg/40 backdrop-blur-sm text-text-primary font-medium text-sm transition-all duration-300 hover:scale-105 hover:border-transparent">
+            <button
+              type="button"
+              onClick={() => scrollToSection('contact')}
+              className="relative group px-10 py-4 rounded-full border-2 border-stroke bg-bg/40 backdrop-blur-sm text-text-primary font-medium text-sm transition-all duration-300 hover:scale-105 hover:border-transparent"
+            >
               <span className="absolute inset-[-2px] rounded-full accent-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <span className="relative z-10">Reach out...</span>
             </button>

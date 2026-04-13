@@ -1,6 +1,14 @@
-import React, { useState, Suspense, lazy, Component, ReactNode } from 'react';
+import React, { useState, useEffect, useCallback, Component, ReactNode } from 'react';
 import Navbar from './components/Navbar';
 import LoadingScreen from './components/LoadingScreen';
+import Hero from './components/Hero';
+import Stats from './components/Stats';
+import Projects from './components/Projects';
+import Journal from './components/Journal';
+import Explorations from './components/Explorations';
+import TechStack from './components/TechStack';
+import ExperienceTimeline from './components/ExperienceTimeline';
+import Footer from './components/Footer';
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
   constructor(props: { children: ReactNode }) {
@@ -25,38 +33,42 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
   }
 }
 
-// Lazy load sections
-const Hero = lazy(() => import('./components/Hero'));
-const Stats = lazy(() => import('./components/Stats'));
-const Projects = lazy(() => import('./components/Projects'));
-const Journal = lazy(() => import('./components/Journal'));
-const Explorations = lazy(() => import('./components/Explorations'));
-const TechStack = lazy(() => import('./components/TechStack'));
-const ExperienceTimeline = lazy(() => import('./components/ExperienceTimeline'));
-const Footer = lazy(() => import('./components/Footer'));
-
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const handleLoadingComplete = useCallback(() => {
+    setIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading) return;
+
+    // Fail-safe: never let the UI remain blocked behind the loading overlay.
+    const timerId = window.setTimeout(() => {
+      setIsLoading(false);
+    }, 6000);
+
+    return () => {
+      window.clearTimeout(timerId);
+    };
+  }, [isLoading]);
 
   return (
     <div className="relative min-h-screen bg-bg selection:bg-white selection:text-black noise-overlay">
-      {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
+      {isLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
 
       {!isLoading && (
         <ErrorBoundary>
-          <Suspense fallback={<div className="h-screen bg-bg" />}>
-            <Navbar />
-            <main>
-              <Hero />
-              <Stats />
-              <Projects />
-              <Explorations />
-              <TechStack />
-              <Journal />
-              <ExperienceTimeline />
-            </main>
-            <Footer />
-          </Suspense>
+          <Navbar />
+          <main>
+            <Hero />
+            <Stats />
+            <Projects />
+            <Explorations />
+            <TechStack />
+            <Journal />
+            <ExperienceTimeline />
+          </main>
+          <Footer />
         </ErrorBoundary>
       )}
     </div>

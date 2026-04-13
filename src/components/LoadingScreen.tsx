@@ -12,6 +12,9 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const [wordIndex, setWordIndex] = useState(0);
 
   useEffect(() => {
+    let animationFrameId: number | undefined;
+    let completionTimeoutId: number | undefined;
+
     const startTime = Date.now();
     const duration = 2700;
 
@@ -24,13 +27,26 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       setWordIndex(Math.min(Math.floor(progress * WORDS.length), WORDS.length - 1));
 
       if (progress < 1) {
-        requestAnimationFrame(animate);
+        animationFrameId = requestAnimationFrame(animate);
       } else {
-        setTimeout(onComplete, 400);
+        completionTimeoutId = window.setTimeout(onComplete, 400);
       }
     };
 
-    requestAnimationFrame(animate);
+    animationFrameId = requestAnimationFrame(animate);
+
+    // Fail-safe completion so UI is never blocked if animation timing gets interrupted.
+    const failSafeTimeoutId = window.setTimeout(onComplete, duration + 1200);
+
+    return () => {
+      if (animationFrameId !== undefined) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      if (completionTimeoutId !== undefined) {
+        window.clearTimeout(completionTimeoutId);
+      }
+      window.clearTimeout(failSafeTimeoutId);
+    };
   }, [onComplete]);
 
   return (

@@ -53,6 +53,28 @@ export default function Explorations() {
           scrub: true,
         },
       });
+
+      // Image-level parallax (background visuals)
+      const parallaxImages = gsap.utils.toArray<HTMLImageElement>('.exploration-parallax');
+
+      parallaxImages.forEach((img, index) => {
+        const strength = 8 + (index % 3) * 4;
+
+        gsap.fromTo(
+          img,
+          { yPercent: -strength, scale: 1.08 },
+          {
+            yPercent: strength,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: img,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: true,
+            },
+          }
+        );
+      });
     }, containerRef);
 
     return () => ctx.revert();
@@ -111,7 +133,11 @@ export default function Explorations() {
                 key={i}
                 className="aspect-square relative group overflow-hidden rounded-2xl grayscale hover:grayscale-0 transition-all duration-700 hover:rotate-2"
               >
-                <img src={img} alt="Exploration" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <img
+                  src={img}
+                  alt="Exploration"
+                  className="exploration-parallax w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 will-change-transform"
+                />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                    <span className="text-white text-xs uppercase tracking-[0.2em]">View Lightbox</span>
                 </div>
@@ -126,7 +152,11 @@ export default function Explorations() {
                 key={i}
                 className="aspect-square relative group overflow-hidden rounded-2xl grayscale hover:grayscale-0 transition-all duration-700 hover:-rotate-2"
               >
-                <img src={img} alt="Exploration" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <img
+                  src={img}
+                  alt="Exploration"
+                  className="exploration-parallax w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 will-change-transform"
+                />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                    <span className="text-white text-xs uppercase tracking-[0.2em]">View Lightbox</span>
                 </div>
