@@ -22,7 +22,7 @@ function AmbientOrb({ x, y, size, delay }: { x: string; y: string; size: number;
       style={{
         left: x, top: y,
         width: size, height: size,
-        background: 'radial-gradient(circle, rgba(74,143,196,0.12) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)',
         filter: 'blur(40px)',
       }}
       animate={{ scale: [1, 1.3, 1], opacity: [0.4, 0.8, 0.4] }}
@@ -253,7 +253,7 @@ export default function Explorations() {
       {/* Section-scoped progress bar */}
       <div className="sticky top-0 w-full h-[1px] z-50 bg-stroke/10 pointer-events-none">
         <motion.div
-          className="h-full bg-gradient-to-r from-[#1a3a5c] to-[#4a8fc4] origin-left"
+          className="h-full bg-white/30 origin-left"
           style={{ width: barWidth }}
         />
       </div>
@@ -295,7 +295,7 @@ export default function Explorations() {
                 {wi === 0 ? (
                   <span className="text-5xl md:text-7xl lg:text-8xl text-text-primary">{word}</span>
                 ) : (
-                  <em className="text-5xl md:text-7xl lg:text-8xl not-italic bg-gradient-to-br from-[#4a8fc4] via-[#6aaed4] to-[#1a3a5c] bg-clip-text text-transparent">
+                  <em className="text-5xl md:text-7xl lg:text-8xl not-italic text-text-primary/70">
                     {word}
                   </em>
                 )}
@@ -327,7 +327,7 @@ export default function Explorations() {
           >
             {/* Animated border using pseudo elements via box shadow */}
             <span className="absolute inset-0 border border-stroke/30 group-hover:border-[#4a8fc4]/60 transition-colors duration-500 rounded-sm" />
-            <span className="absolute bottom-0 left-0 h-px w-0 bg-gradient-to-r from-[#4a8fc4] to-[#1a3a5c] group-hover:w-full transition-all duration-500" />
+            <span className="absolute bottom-0 left-0 h-px w-0 bg-white/60 group-hover:w-full transition-all duration-500" />
             <span>GitHub Profile</span>
             <motion.span
               animate={{ x: [0, 3, 0], y: [0, -3, 0] }}
@@ -352,7 +352,7 @@ export default function Explorations() {
                     className="exploration-card aspect-[4/5] relative overflow-hidden rounded-xl grayscale hover:grayscale-0 transition-[filter,box-shadow] duration-700 cursor-pointer"
                     style={{
                       boxShadow: activeCard === i
-                        ? '0 0 40px 4px rgba(74,143,196,0.18), 0 20px 60px rgba(0,0,0,0.5)'
+                        ? '0 0 40px 4px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.5)'
                         : '0 8px 32px rgba(0,0,0,0.4)',
                     }}
                     onMouseEnter={() => setActiveCard(i)}
@@ -392,7 +392,7 @@ export default function Explorations() {
                     className="exploration-card aspect-[4/5] relative overflow-hidden rounded-xl grayscale hover:grayscale-0 transition-[filter,box-shadow] duration-700 cursor-pointer"
                     style={{
                       boxShadow: activeCard === i + 3
-                        ? '0 0 40px 4px rgba(74,143,196,0.18), 0 20px 60px rgba(0,0,0,0.5)'
+                        ? '0 0 40px 4px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.5)'
                         : '0 8px 32px rgba(0,0,0,0.4)',
                     }}
                     onMouseEnter={() => setActiveCard(i + 3)}
@@ -434,7 +434,7 @@ export default function Explorations() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
             style={{
-              background: 'radial-gradient(ellipse 600px 400px at 50% 50%, rgba(74,143,196,0.05) 0%, transparent 70%)',
+              background: 'radial-gradient(ellipse 600px 400px at 50% 50%, rgba(255,255,255,0.02) 0%, transparent 70%)',
             }}
           />
         )}

@@ -37,8 +37,8 @@ export default function ExperienceTimeline() {
 
           {/* Right: Timeline */}
           <div className="lg:w-2/3 relative">
-            {/* Vertical line — only spans visible items */}
-            <div className="absolute left-[11px] top-4 bottom-4 w-px bg-stroke/30" />
+            {/* Vertical line — sits in the left gutter, outside text flow */}
+            <div className="absolute -left-5 top-2 bottom-4 w-px bg-stroke/30 hidden lg:block" />
 
             <div className="space-y-0">
               <AnimatePresence initial={false}>
@@ -49,10 +49,10 @@ export default function ExperienceTimeline() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.55, delay: i < INITIAL_SHOW ? i * 0.08 : (i - INITIAL_SHOW) * 0.07, ease: [0.16, 1, 0.3, 1] }}
-                    className="relative pl-10 pb-14 group"
+                    className="relative pb-14 group"
                   >
-                    {/* Dot */}
-                    <div className="absolute left-[3px] top-[6px] w-[15px] h-[15px] rounded-full border-2 border-stroke bg-bg group-hover:border-white transition-colors duration-300 z-10" />
+                    {/* Dot — floats in the gutter, doesn't affect text flow */}
+                    <div className="absolute -left-[23px] top-[6px] w-[15px] h-[15px] rounded-full border-2 border-stroke bg-bg group-hover:border-white transition-colors duration-300 z-10 hidden lg:block" />
 
                     {/* Header row — title+org left, date right, same baseline */}
                     <div className="flex items-baseline justify-between gap-4 mb-3">
@@ -87,7 +87,7 @@ export default function ExperienceTimeline() {
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                className="pl-10 mt-2"
+                className="mt-2"
               >
                 <button
                   onClick={() => setExpanded((v) => !v)}
