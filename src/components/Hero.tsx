@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Hls from 'hls.js';
 import gsap from 'gsap';
 import { profile } from '../data/data';
 import Magnetic from './Magnetic';
@@ -11,6 +12,7 @@ export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [roleIndex, setRoleIndex] = useState(0);
+  const [videoReady, setVideoReady] = useState(false);
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
@@ -50,21 +52,29 @@ export default function Hero() {
     return () => ctx.revert();
   }, []);
 
-  // HLS logic
+  // HLS logic — eagerly imported (no dynamic import delay)
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    import('hls.js').then(({ default: Hls }) => {
-      if (Hls.isSupported()) {
-        const hls = new Hls();
-        hls.loadSource(HLS_SRC);
-        hls.attachMedia(video);
-        return () => hls.destroy();
-      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = HLS_SRC;
-      }
-    });
+    let hls: Hls | null = null;
+
+    const onCanPlay = () => setVideoReady(true);
+    video.addEventListener('canplaythrough', onCanPlay);
+
+    if (Hls.isSupported()) {
+      hls = new Hls({ lowLatencyMode: true, maxBufferLength: 10 });
+      hls.loadSource(HLS_SRC);
+      hls.attachMedia(video);
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      // Safari native HLS
+      video.src = HLS_SRC;
+    }
+
+    return () => {
+      video.removeEventListener('canplaythrough', onCanPlay);
+      hls?.destroy();
+    };
   }, []);
 
   // Role Cycling
@@ -85,7 +95,8 @@ export default function Hero() {
           muted
           loop
           playsInline
-          className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto object-cover -translate-x-1/2 -translate-y-1/2"
+          className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto object-cover -translate-x-1/2 -translate-y-1/2 transition-opacity duration-1000"
+          style={{ opacity: videoReady ? 1 : 0 }}
         />
         <div className="absolute inset-0 bg-black/20" />
         <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-bg to-transparent" />
