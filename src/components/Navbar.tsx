@@ -6,6 +6,7 @@ import Magnetic from './Magnetic';
 const navLinks = [
   { label: 'Home', href: '#hero' },
   { label: 'Projects', href: '#projects' },
+  { label: 'Open Source', href: '#open-source' },
   { label: 'Experience', href: '#experience' },
 ];
 
@@ -17,15 +18,15 @@ export default function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 100);
 
-      const sections = ['hero', 'projects', 'experience', 'journal', 'explorations'];
+      const sections = ['hero', 'projects', 'open-source', 'experience', 'explorations'];
       for (const id of sections.reverse()) {
         const el = document.getElementById(id);
         if (el && window.scrollY >= el.offsetTop - 200) {
           const map: Record<string, string> = {
             hero: 'Home',
             projects: 'Projects',
+            'open-source': 'Open Source',
             experience: 'Experience',
-            journal: 'Journal',
             explorations: 'Visuals',
           };
           setActive(map[id] || 'Home');

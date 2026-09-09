@@ -30,7 +30,7 @@ export default function ExperienceTimeline() {
                 <em className="font-display-italic not-italic-override">experience</em>
               </h2>
               <p className="text-muted text-base max-w-sm">
-                A journey through leadership, research, and technical community initiatives.
+                Founding, shipping, and teaching — the same throughline across every role.
               </p>
             </motion.div>
           </div>

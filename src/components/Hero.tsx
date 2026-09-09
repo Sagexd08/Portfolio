@@ -6,7 +6,7 @@ import { profile } from '../data/data';
 import Magnetic from './Magnetic';
 
 const HLS_SRC = 'https://stream.mux.com/Aa02T7oM1wH5Mk5EEVDYhbZ1ChcdhRsS2m1NYyx4Ua1g.m3u8';
-const ROLES = ['Creative', 'Fullstack Developer', 'AI/ML Researcher', 'Founder @ Oxify Labs'];
+const ROLES = ['Gen AI Engineer', 'CEO & Co-founder @ Lumeo', 'ML & Agentic Systems', 'Open Source Contributor'];
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -144,7 +144,7 @@ export default function Hero() {
         </div>
 
         <p className="blur-in text-sm md:text-base text-muted max-w-md mb-12 text-balance lg:px-4">
-          Designing seamless digital interactions by focusing on the unique nuances which bring systems to life.
+          Building Gen AI systems in production — LangChain and LangGraph agentic pipelines, shipped end-to-end.
         </p>
 
         {/* CTA Buttons */}

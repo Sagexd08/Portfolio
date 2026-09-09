@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 import { techStack, techCategories } from '../data/data';
 import * as SiIcons from 'react-icons/si';
 import { LuTerminal } from 'react-icons/lu';
+import { FaAws } from 'react-icons/fa6';
 
 // 3D Texture Mapping
 const imageUrls = [
@@ -66,12 +67,14 @@ const categoryColors: Record<string, any> = {
 
 function getTechIcon(iconKey?: string) {
   if (!iconKey) return <LuTerminal />;
-  
+
+  // Icons that don't live in the simple-icons set
+  if (iconKey === 'amazonwebservices') return <FaAws />;
+
   const overrides: Record<string, string> = {
     'nextdotjs': 'SiNextdotjs',
     'web3dotjs': 'SiWeb3dotjs',
     'cplusplus': 'SiCplusplus',
-    'amazonwebservices': 'SiAmazonwebservices',
     'fastapi': 'SiFastapi',
     'huggingface': 'SiHuggingface',
     'stablediffusion': 'SiStabilityai'
@@ -79,7 +82,7 @@ function getTechIcon(iconKey?: string) {
 
   const formattedKey = overrides[iconKey] || ('Si' + iconKey.charAt(0).toUpperCase() + iconKey.slice(1));
   const IconComponent = (SiIcons as any)[formattedKey];
-  
+
   return IconComponent ? <IconComponent /> : <LuTerminal />;
 }
 

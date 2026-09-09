@@ -1,17 +1,18 @@
 import { motion } from 'framer-motion';
 import { featuredProjects, type Project } from '../data/data';
-import { LuGithub, LuExternalLink, LuLayers, LuBrain, LuDatabase, LuImage, LuLock, LuCommand, LuSearch, LuGlobe, LuBox } from 'react-icons/lu';
+import { LuGithub, LuExternalLink, LuLayers, LuBrain, LuDatabase, LuImage, LuLock, LuCommand, LuSearch, LuGlobe, LuRefreshCw, LuBox } from 'react-icons/lu';
 
 function getProjectIcon(id: string) {
   const map: Record<string, React.ReactNode> = {
     'archi-dev': <LuLayers />,
-    'serene-mind': <LuBrain />,
-    'dacap': <LuDatabase />,
-    'lexigraph': <LuImage />,
-    'zelda': <LuLock />,
+    'iris-protocol': <LuGlobe />,
+    'reforge': <LuRefreshCw />,
+    'xai-plant-disease': <LuImage />,
+    'neural-network-scratch': <LuBrain />,
     'sage-ai': <LuCommand />,
     'shortlist-ai': <LuSearch />,
-    'autofi': <LuGlobe />,
+    'brier': <LuLock />,
+    'dacap': <LuDatabase />,
   };
   return map[id] || <LuBox />;
 }
@@ -118,7 +119,7 @@ export default function Projects() {
             </a>
           </div>
           <p className="text-base text-muted mt-6 max-w-xl">
-            A selection of projects I've worked on, from concept to launch.
+            Gen AI, RAG, and agentic systems — built, shipped, and running.
           </p>
         </motion.div>
 

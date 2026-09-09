@@ -4,6 +4,7 @@ import LoadingScreen from './components/LoadingScreen';
 import Hero from './components/Hero';
 import Stats from './components/Stats';
 import Projects from './components/Projects';
+import OpenSource from './components/OpenSource';
 import Explorations from './components/Explorations';
 import TechStack from './components/TechStack';
 import ExperienceTimeline from './components/ExperienceTimeline';
@@ -62,6 +63,7 @@ function App() {
             <Hero />
             <Stats />
             <Projects />
+            <OpenSource />
             <Explorations />
             <TechStack />
             <ExperienceTimeline />

@@ -4,21 +4,24 @@ import { useEffect } from 'react';
 
 const stats = [
   {
-    value: 51,
-    label: 'Open-source contributions',
-    sub: 'across GitHub',
+    value: 40000,
+    suffix: '+',
+    label: 'Waitlist signups at Lumeo',
+    sub: 'with zero ad spend',
     accent: 'from-[#1a3a5c] to-[#4a8fc4]',
   },
   {
-    value: 8,
-    label: 'AI/ML systems shipped',
-    sub: 'in production',
+    value: 25,
+    suffix: '+',
+    label: 'Students mentored',
+    sub: 'web3 & ML projects',
     accent: 'from-[#1a3a5c] to-[#4a8fc4]',
   },
   {
-    value: 15,
-    label: 'Full-stack products built',
-    sub: 'end-to-end',
+    value: 50,
+    suffix: '%',
+    label: 'Point-attribution accuracy gain',
+    sub: 'ml pipeline at hackquest',
     accent: 'from-[#1a3a5c] to-[#4a8fc4]',
   },
 ];
@@ -41,7 +44,7 @@ function AnimatedNumber({ value, inView }: { value: number; inView: boolean }) {
   // subscribe and update DOM directly for perf
   useEffect(() => {
     return rounded.on('change', (v) => {
-      if (ref.current) ref.current.textContent = String(v);
+      if (ref.current) ref.current.textContent = v.toLocaleString('en-US');
     });
   }, [rounded]);
 
@@ -100,7 +103,7 @@ export default function Stats() {
                 >
                   <AnimatedNumber value={stat.value} inView={inView} />
                 </span>
-                <span className="text-4xl md:text-5xl font-display text-text-primary/50 mb-1">+</span>
+                <span className="text-4xl md:text-5xl font-display text-text-primary/50 mb-1">{stat.suffix}</span>
               </div>
 
               {/* Animated underline */}
