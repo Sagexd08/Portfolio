@@ -53,3 +53,10 @@ $RECYCLE.BIN/
 # Test coverage
 coverage/
 .nyc_output/
+
+models/HuggingFaceTB/
+.env*
+!.env.production
+!.env.example
+
+models/
