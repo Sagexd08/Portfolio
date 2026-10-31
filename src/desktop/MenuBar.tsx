@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { profile } from '../content/portfolio';
 import { APP_META, DOCK_ORDER } from './appMeta';
 import { DynamicIsland } from './DynamicIsland';
+import { toggleOverlay, type Overlay } from './overlays';
 import {
   closeWindow,
   launchApp,
@@ -174,7 +175,14 @@ export function MenuBar({ mobile }: { mobile: boolean }) {
         ))}
       </nav>
       <div className="absolute left-1/2 -translate-x-1/2"><DynamicIsland /></div>
-      <Clock />
+      <div className="flex items-center gap-1">
+        {([['launchpad', 'Launchpad', <path key="p" d="M4 4h4v4H4zM10 4h4v4h-4zM16 4h4v4h-4zM4 10h4v4H4zM10 10h4v4h-4zM16 10h4v4h-4zM4 16h4v4H4zM10 16h4v4h-4zM16 16h4v4h-4z" />], ['spotlight', 'Spotlight search', <><circle key="c" cx="11" cy="11" r="6" /><path key="l" d="m20 20-4.2-4.2" /></>], ['control', 'Control Center', <path key="s" d="M4 8h10M18 8h2M4 16h2M10 16h10M14 6v4M6 14v4" />]] as [NonNullable<Overlay>, string, React.ReactNode][]).map(([id, label, glyph]) => (
+          <button key={id} type="button" data-overlay-toggle aria-label={label} onClick={() => toggleOverlay(id)} className="flex h-5 w-6 items-center justify-center rounded">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">{glyph}</svg>
+          </button>
+        ))}
+        <button type="button" data-overlay-toggle aria-label="Notification Center" onClick={() => toggleOverlay('notifications')} className="rounded px-1"><Clock /></button>
+      </div>
     </header>
   );
 }

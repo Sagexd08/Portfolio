@@ -3,12 +3,22 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { setAiStatus } from '../ai/status';
 import { APP_META, appFromPath, pathFor } from './appMeta';
 import { BootScreen } from './BootScreen';
+import { ControlCenter } from './ControlCenter';
+import { DesktopIcons } from './DesktopIcons';
 import { Dock } from './Dock';
+import { Launchpad } from './Launchpad';
+import { notify, seedNotices } from './notify';
+import { NotificationCenter, Toasts } from './NotificationCenter';
+import { toggleOverlay } from './overlays';
+import { initPrefs } from './prefs';
+import { Spotlight } from './Spotlight';
 import { Eggs } from './Eggs';
 import { MenuBar } from './MenuBar';
 import { getDesktop, launchApp, openApp, useDesktop } from './store';
 import { useIsMobile } from './useMedia';
 import { WindowFrame } from './Window';
+
+initPrefs();
 
 const BOOT_FLAG = 'desktop-booted';
 const SITE = 'https://sohomchatterjee.vercel.app';
@@ -94,10 +104,20 @@ export default function Desktop() {
   }, [windows, booted]);
 
   useEffect(() => {
+    if (!booted) return;
+    seedNotices();
+    notify({ title: 'Welcome', body: 'Press Ctrl+Space for Spotlight, or open Control Center to change the wallpaper.' });
+  }, [booted]);
+
+  useEffect(() => {
     const onKey = (event: KeyboardEvent): void => {
+      const typing = event.target instanceof HTMLElement && /^(INPUT|TEXTAREA)$/.test(event.target.tagName);
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault();
         launchApp('assistant');
+      } else if ((event.ctrlKey && event.code === 'Space') || (event.key === '/' && !typing)) {
+        event.preventDefault();
+        toggleOverlay('spotlight');
       }
     };
     window.addEventListener('keydown', onKey);
@@ -116,7 +136,13 @@ export default function Desktop() {
           <WindowFrame key={win.id} win={win} focused={win.id === focusedId} mobile={mobile} />
         ))}
       </main>
+      <DesktopIcons hidden={mobile} />
       <Dock mobile={mobile} />
+      <Spotlight />
+      <NotificationCenter />
+      <ControlCenter />
+      <Launchpad />
+      <Toasts />
       <Eggs />
       {!booted && <BootScreen onDone={finishBoot} />}
     </div>

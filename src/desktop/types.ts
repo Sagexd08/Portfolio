@@ -8,10 +8,13 @@ export type AppId =
   | 'resume'
   | 'open-source'
   | 'gallery'
+  | 'finder'
+  | 'maps'
   | 'assistant'
   | 'contact'
   | 'help'
   | 'playground'
+  | 'snake'
   | 'embeddings';
 
 export interface AppProps {

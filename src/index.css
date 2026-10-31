@@ -29,6 +29,47 @@
   }
 }
 
+:root[data-theme='dark'] {
+  --surface: #1d1e22;
+  --surface-2: #26272c;
+  --chrome: #2b2c31;
+  --ink: #ececef;
+  --muted: #9b9ba4;
+  --hairline: rgba(255, 255, 255, 0.12);
+  --accent: #8fb0e6;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --surface: #f7f6f3;
+  --surface-2: #eceae6;
+  --chrome: #e8e6e2;
+  --ink: #1b1b1e;
+  --muted: #66666d;
+  --hairline: rgba(0, 0, 0, 0.12);
+  --accent: #4b6ea6;
+  color-scheme: light;
+}
+
+:root[data-reduce-motion] *,
+:root[data-reduce-motion] *::before,
+:root[data-reduce-motion] *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+}
+
+.maps-tiles .leaflet-popup-content-wrapper {
+  color: #1b1b1e;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .maps-tiles .leaflet-tile-pane {
+    filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.9);
+  }
+}
+:root[data-theme='dark'] .maps-tiles .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.9);
+}
+
 html,
 body,
 #root {
@@ -36,7 +77,7 @@ body,
   margin: 0;
   overflow: hidden;
   background: var(--desk);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   color: var(--ink);
 }
@@ -65,6 +106,37 @@ button {
     radial-gradient(900px 600px at -10% 110%, rgba(90, 110, 100, 0.14), transparent 60%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M48 0H0v48' fill='none' stroke='%23ffffff' stroke-opacity='0.035'/%3E%3C/svg%3E"),
     var(--desk);
+}
+
+/* macOS-style dynamic wallpapers: original gradients evoking each release, not Apple artwork. */
+:root[data-wallpaper='sonoma'] .wallpaper {
+  background:
+    radial-gradient(900px 520px at 20% 105%, #6b9a4f 0%, transparent 62%),
+    radial-gradient(1100px 600px at 80% 100%, #c9a45a 0%, transparent 60%),
+    linear-gradient(180deg, #2c3e73 0%, #6a7fb5 45%, #d9b99b 100%);
+}
+:root[data-wallpaper='sequoia'] .wallpaper {
+  background:
+    radial-gradient(800px 500px at 70% 90%, #e08a5a 0%, transparent 60%),
+    radial-gradient(900px 600px at 10% 100%, #2f5d4b 0%, transparent 65%),
+    linear-gradient(180deg, #1c2a3f 0%, #3d5a73 50%, #c98b6b 100%);
+}
+:root[data-wallpaper='monterey'] .wallpaper {
+  background:
+    radial-gradient(900px 600px at 15% 20%, #e96aa8 0%, transparent 60%),
+    radial-gradient(1000px 700px at 85% 80%, #3f46c9 0%, transparent 60%),
+    linear-gradient(135deg, #7b3fc4, #2a1f6b);
+}
+:root[data-wallpaper='big-sur'] .wallpaper {
+  background:
+    radial-gradient(900px 500px at 80% 10%, #ff9e7a 0%, transparent 60%),
+    radial-gradient(1000px 600px at 10% 90%, #3b1d78 0%, transparent 65%),
+    linear-gradient(160deg, #f26d8f, #5a3bb0 55%, #1d2f7a);
+}
+:root[data-wallpaper='graphite'] .wallpaper {
+  background:
+    radial-gradient(1000px 600px at 70% 0%, rgba(160, 170, 190, 0.22), transparent 60%),
+    linear-gradient(180deg, #2a2c32, #14151a);
 }
 
 .win-in {
