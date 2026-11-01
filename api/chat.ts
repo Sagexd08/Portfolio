@@ -1,14 +1,12 @@
-// Hosted SLM proxy: validates the request, then pipes the Hugging Face router SSE stream back.
-// HF_TOKEN is read from the server environment only.
+// Hosted SLM proxy: validates the request, then pipes the Cloud Run llama.cpp SSE stream back.
+// INFERENCE_URL (the Cloud Run service URL) is read from the server environment only; see inference/README.md.
 
-const UPSTREAM = 'https://router.huggingface.co/v1/chat/completions';
-const MODEL = 'ibm-granite/granite-4.2-3b';
 const MAX_MESSAGES = 8;
 const MAX_CONTENT = 6000;
 const MAX_TOTAL = 12000;
 const RATE_LIMIT = 20;
 const RATE_WINDOW_MS = 60_000;
-const UPSTREAM_TIMEOUT_MS = 25_000;
+const UPSTREAM_TIMEOUT_MS = 50_000; // covers a Cloud Run cold start plus generation
 const ROLES = new Set(['system', 'user', 'assistant']);
 const ALLOWED_ORIGINS = new Set(['https://sohomchatterjee.vercel.app']);
 const LOCAL_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1):\d+$/;
@@ -61,14 +59,14 @@ export async function POST(request: Request): Promise<Response> {
   const messages = validMessages(body);
   if (!messages) return json({ error: 'Invalid request' }, 400, origin);
 
-  const token = process.env.HF_TOKEN;
-  if (!token) return json({ error: 'Hosted model unavailable' }, 503, origin);
+  const base = process.env.INFERENCE_URL;
+  if (!base) return json({ error: 'Hosted model unavailable' }, 503, origin);
 
   try {
-    const upstream = await fetch(UPSTREAM, {
+    const upstream = await fetch(`${base.replace(/\/$/, '')}/v1/chat/completions`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
-      body: JSON.stringify({ model: MODEL, messages, max_tokens: 300, temperature: 0.2, stream: true }),
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ messages, max_tokens: 300, temperature: 0.2, stream: true }),
       signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
     });
     if (!upstream.ok || !upstream.body) return json({ error: 'Hosted model unavailable' }, 503, origin);
