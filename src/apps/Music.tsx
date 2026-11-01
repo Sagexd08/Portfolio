@@ -16,9 +16,11 @@ function clock(seconds: number): string {
 }
 
 function Art({ id, size, label }: { id: string; size: number; label: string }) {
+  const [failed, setFailed] = useState(false);
   return (
-    <span aria-hidden="true" className="flex flex-none items-center justify-center rounded-lg text-white" style={{ width: size, height: size, background: artGradient(id), fontSize: size / 2.6, fontWeight: 600, boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35)' }}>
+    <span aria-hidden="true" className="relative flex flex-none items-center justify-center overflow-hidden rounded-lg text-white" style={{ width: size, height: size, background: artGradient(id), fontSize: size / 2.6, fontWeight: 600, boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35)' }}>
       {label[0]?.toUpperCase()}
+      {!failed && <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" loading="lazy" onError={() => setFailed(true)} className="absolute inset-0 h-full w-full object-cover" />}
     </span>
   );
 }
@@ -95,16 +97,15 @@ export default function Music(_props: AppProps) {
         </div>
         <section aria-label="Queue" className="min-w-0 flex-1">
           <h3 className="m-0 mb-2 text-[12px] font-semibold uppercase" style={{ color: 'var(--muted)' }}>Up next</h3>
-          <ul className="m-0 list-none space-y-1 p-0">
+          <ul className="m-0 grid list-none grid-cols-2 gap-2 p-0 lg:grid-cols-3">
             {songs.map((item, i) => (
               <li key={item.youtubeId}>
-                <button type="button" aria-current={i === index} onClick={() => select(i)} className="row-hover flex w-full items-center gap-3 rounded-xl p-2 text-left" style={{ background: i === index ? 'color-mix(in srgb, var(--accent) 22%, transparent)' : undefined }}>
-                  <Art id={item.youtubeId} size={44} label={item.title} />
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[13.5px] font-medium">{item.title}</span>
-                    <span className="block truncate text-[12px]" style={{ color: 'var(--muted)' }}>{item.artist}</span>
+                <button type="button" aria-current={i === index} onClick={() => select(i)} className="row-hover flex w-full flex-col gap-2 rounded-xl p-2 text-left" style={{ background: i === index ? 'color-mix(in srgb, var(--accent) 22%, transparent)' : undefined }}>
+                  <Art id={item.youtubeId} size={96} label={item.title} />
+                  <span className="min-w-0">
+                    <span className="block truncate text-[13px] font-medium">{item.title}</span>
+                    <span className="block truncate text-[11.5px]" style={{ color: 'var(--muted)' }}>{i === index && playing ? 'Playing · ' : ''}{item.artist}</span>
                   </span>
-                  {i === index && playing && <span className="text-[11px]" style={{ color: 'var(--accent)' }}>Playing</span>}
                 </button>
               </li>
             ))}
