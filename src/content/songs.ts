@@ -16,4 +16,5 @@ export const songs: Song[] = [
   { title: 'Shakti Aur Kshama', artist: 'Seedhe Maut', youtubeId: 'SR57_CPR-lU' },
   { title: 'Pusher', artist: 'Justice, Gesaffelstein', youtubeId: 'XEV73LaZ6JQ' },
   { title: 'F1', artist: 'Hans Zimmer', youtubeId: 'YhX_Woa3kVA' },
+  { title: 'Cornfield Chase', artist: 'Hans Zimmer', youtubeId: '7GlsxNI4LVI' },
 ];
