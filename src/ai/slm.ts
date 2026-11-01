@@ -65,6 +65,37 @@ export function embedQuery(text: string): Promise<number[]> {
   });
 }
 
+// Hosted SLM via the /api/chat proxy (no download). Throws on any non-200 so callers can fall back.
+export async function generateRemote(messages: ChatMessage[], onToken: (text: string) => void, signal?: AbortSignal): Promise<string> {
+  const response = await fetch('/api/chat', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages }), signal });
+  if (response.status !== 200 || !response.body) throw new Error('Hosted model unavailable');
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let text = '';
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop() ?? '';
+    for (const line of lines) {
+      const data = line.startsWith('data:') ? line.slice(5).trim() : '';
+      if (!data || data === '[DONE]') continue;
+      try {
+        const token = (JSON.parse(data) as { choices?: { delta?: { content?: string } }[] }).choices?.[0]?.delta?.content;
+        if (token) {
+          text += token;
+          onToken(token);
+        }
+      } catch {
+        // partial or non-JSON frame; skip
+      }
+    }
+  }
+  return text;
+}
+
 export function generate(messages: ChatMessage[], onToken: (text: string) => void, signal?: AbortSignal): Promise<string> {
   const id = nextId++;
   signal?.addEventListener('abort', () => getWorker().postMessage({ type: 'stop' }));

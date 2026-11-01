@@ -29,7 +29,7 @@ export function ControlCenter() {
   useDismiss(ref, active);
   if (!active) return null;
   return (
-    <section ref={ref} aria-label="Control Center" className="win-in fixed right-2 top-[34px] z-[24000] w-[min(94vw,320px)] space-y-2 rounded-2xl p-3" style={{ background: 'color-mix(in srgb, var(--chrome) 90%, transparent)', backdropFilter: 'blur(24px)', border: '1px solid var(--hairline)', boxShadow: '0 24px 60px rgba(0,0,0,0.4)', color: 'var(--ink)' }}>
+    <section ref={ref} aria-label="Control Center" className="win-in glass fixed right-2 top-[34px] z-[24000] w-[min(94vw,320px)] space-y-2 p-3" style={{ borderRadius: 26 }}>
       <div className="rounded-xl p-3" style={{ background: 'var(--surface)', border: '1px solid var(--hairline)' }}>
         <p className="m-0 mb-2 text-[12px] font-semibold" style={{ color: 'var(--muted)' }}>Appearance</p>
         <div className="flex gap-1" role="radiogroup" aria-label="Appearance">

@@ -75,7 +75,7 @@ export function Spotlight() {
 
   return (
     <div className="fixed inset-0 z-[24000] flex items-start justify-center pt-[16vh]" style={{ background: 'rgba(0,0,0,0.18)' }}>
-      <div ref={panel} role="dialog" aria-label="Spotlight search" className="win-in w-[min(92vw,620px)] overflow-hidden rounded-2xl" style={{ background: 'color-mix(in srgb, var(--chrome) 92%, transparent)', backdropFilter: 'blur(24px)', border: '1px solid var(--hairline)', boxShadow: '0 30px 80px rgba(0,0,0,0.45)', color: 'var(--ink)' }}>
+      <div ref={panel} role="dialog" aria-label="Spotlight search" className="win-in glass w-[min(92vw,620px)] overflow-hidden" style={{ borderRadius: 26 }}>
         <div className="flex items-center gap-3 px-4 py-3">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
           <input
@@ -96,7 +96,7 @@ export function Spotlight() {
           {results.map((item, i) => (
             <li key={item.id} id={`sp-${item.id}`} role="option" aria-selected={i === active}>
               <button type="button" onMouseEnter={() => setActive(i)} onClick={() => run(item)} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left" style={{ background: i === active ? 'var(--accent)' : 'transparent', color: i === active ? '#fff' : 'var(--ink)' }}>
-                <span className="flex h-6 w-6 flex-none items-center" aria-hidden="true">{item.app ? APP_ICONS[item.app] : null}</span>
+                <span className="flex h-7 w-7 flex-none items-center" aria-hidden="true">{item.app ? APP_ICONS[item.app] : null}</span>
                 <span className="min-w-0 flex-1 truncate text-[14px]">{item.label}</span>
                 <span className="text-[12px] opacity-70">{item.group === 'Applications' ? 'Application' : item.hint}</span>
               </button>

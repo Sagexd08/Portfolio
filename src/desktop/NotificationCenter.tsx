@@ -63,7 +63,7 @@ export function NotificationCenter() {
   useDismiss(ref, active);
   if (!active) return null;
   return (
-    <aside ref={ref} aria-label="Notification Center" className="win-in fixed bottom-24 right-2 top-[34px] z-[24000] w-[min(94vw,360px)] overflow-auto rounded-2xl p-3" style={{ background: 'color-mix(in srgb, var(--chrome) 90%, transparent)', backdropFilter: 'blur(24px)', border: '1px solid var(--hairline)', boxShadow: '0 24px 60px rgba(0,0,0,0.4)', color: 'var(--ink)' }}>
+    <aside ref={ref} aria-label="Notification Center" className="win-in glass fixed bottom-24 right-2 top-[34px] z-[24000] w-[min(94vw,360px)] overflow-auto p-3" style={{ borderRadius: 26 }}>
       <div className="mb-2 flex items-center justify-between">
         <h2 className="m-0 text-[15px] font-semibold">Notifications</h2>
         <div className="flex items-center gap-2 text-[12px]">
@@ -88,7 +88,7 @@ export function Toasts() {
   return (
     <div aria-live="polite" className="pointer-events-none fixed right-2 top-[34px] z-[23000] flex w-[min(94vw,340px)] flex-col gap-2">
       {toasts.map((toast) => (
-        <div key={toast.id} role="status" className="win-in pointer-events-auto rounded-2xl p-3" style={{ background: 'color-mix(in srgb, var(--chrome) 92%, transparent)', backdropFilter: 'blur(20px)', border: '1px solid var(--hairline)', boxShadow: '0 14px 36px rgba(0,0,0,0.35)', color: 'var(--ink)' }}>
+        <div key={toast.id} role="status" className="win-in glass pointer-events-auto p-3" style={{ borderRadius: 22 }}>
           <button type="button" onClick={() => { dismissToast(toast.id); if (toast.app) openApp(toast.app, toast.params ?? {}); }} className="block w-full text-left">
             <span className="block text-[13px] font-semibold">{toast.title}</span>
             <span className="block text-[12.5px]" style={{ color: 'var(--muted)' }}>{toast.body}</span>

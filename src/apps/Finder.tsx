@@ -21,6 +21,27 @@ interface Place {
   entries: () => Entry[];
 }
 
+function FileGlyph({ type, label }: { type: 'folder' | 'pdf' | 'doc'; label?: string }) {
+  if (type === 'folder') {
+    return (
+      <svg viewBox="0 0 48 48" width="100%" height="100%" aria-hidden="true">
+        <path d="M4 12a4 4 0 0 1 4-4h10l4 4h18a4 4 0 0 1 4 4v22a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#4aa8f0" />
+        <path d="M4 18a4 4 0 0 1 4-4h32a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#7cc4ff" />
+        {label && <text x="24" y="34" textAnchor="middle" fontSize="14" fontWeight="700" fill="#1f5f9e">{label}</text>}
+      </svg>
+    );
+  }
+  const accent = type === 'pdf' ? '#d2574d' : '#6a7585';
+  return (
+    <svg viewBox="0 0 48 48" width="100%" height="100%" aria-hidden="true">
+      <path d="M11 4h18l10 10v28a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" fill="#fff" stroke="#c9ccd3" strokeWidth="1.5" />
+      <path d="M29 4v10h10" fill="#e6e8ee" stroke="#c9ccd3" strokeWidth="1.5" />
+      <rect x="9" y="28" width="30" height="12" rx="2" fill={accent} />
+      <text x="24" y="37.5" textAnchor="middle" fontSize="9" fontWeight="700" fill="#fff">{type === 'pdf' ? 'PDF' : 'DOC'}</text>
+    </svg>
+  );
+}
+
 const appEntry = (app: AppId): Entry => ({ id: app, label: APP_META[app].title, kind: 'Application', icon: APP_ICONS[app], open: () => launchApp(app) });
 
 const PLACES: Place[] = [
@@ -32,7 +53,7 @@ const PLACES: Place[] = [
       id: project.slug,
       label: project.name,
       kind: project.category,
-      icon: <span className="flex h-full w-full items-center justify-center text-[20px] font-semibold">{project.name[0]}</span>,
+      icon: <FileGlyph type="folder" label={project.name[0]} />,
       open: () => openApp('projects', { slug: project.slug }),
     })),
   },
@@ -47,7 +68,7 @@ const PLACES: Place[] = [
         id: 'resume-pdf',
         label: 'Resume.pdf',
         kind: 'PDF document',
-        icon: <span className="text-[11px] font-bold" style={{ color: '#d2574d' }}>PDF</span>,
+        icon: <FileGlyph type="pdf" />,
         open: () => {
           const link = document.createElement('a');
           link.href = profile.resumeUrl;
@@ -96,10 +117,10 @@ export default function Finder(_props: AppProps) {
                 onDoubleClick={entry.open}
                 onKeyDown={(event) => event.key === 'Enter' && entry.open()}
                 aria-label={`${entry.label}, ${entry.kind}. Double-click or press Enter to open`}
-                className={list ? 'flex w-full items-center gap-3 rounded-md px-2 py-1 text-left text-[13px]' : 'flex w-full flex-col items-center gap-1 rounded-lg p-2 text-center text-[12px]'}
+                className={`${selected === entry.id ? '' : 'row-hover'} ${list ? 'flex w-full items-center gap-3 rounded-md px-2 py-1 text-left text-[13px]' : 'flex w-full flex-col items-center gap-1 rounded-xl p-2 text-center text-[12px]'}`}
                 style={{ background: selected === entry.id ? 'var(--accent)' : 'transparent', color: selected === entry.id ? '#fff' : 'var(--ink)' }}
               >
-                <span className={list ? 'flex h-5 w-5 items-center' : 'flex h-12 w-12 items-center justify-center rounded-xl p-2'} style={list ? undefined : { background: 'var(--surface-2)', border: '1px solid var(--hairline)', color: 'var(--ink)' }}>{entry.icon}</span>
+                <span aria-hidden="true" className={list ? 'flex h-5 w-5 flex-none items-center' : 'flex h-14 w-14 items-center justify-center'}>{entry.icon}</span>
                 <span className="min-w-0 flex-1 truncate">{entry.label}</span>
                 {list && <span className="text-[12px] opacity-70">{entry.kind}</span>}
               </button>

@@ -15,7 +15,10 @@ export type AppId =
   | 'help'
   | 'playground'
   | 'snake'
-  | 'embeddings';
+  | 'embeddings'
+  | 'browser'
+  | 'linkedin'
+  | 'music';
 
 export interface AppProps {
   windowId: string;

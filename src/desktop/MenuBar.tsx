@@ -130,8 +130,8 @@ export function MenuBar({ mobile }: { mobile: boolean }) {
     <header
       ref={root}
       onKeyDown={onMenuKey}
-      className="fixed inset-x-0 top-0 z-[9500] flex items-center justify-between px-2"
-      style={{ height: 28, background: 'color-mix(in srgb, #000 55%, transparent)', backdropFilter: 'blur(12px)', color: '#f2f2f4', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+      className="glass-bar fixed inset-x-0 top-0 z-[9500] flex items-center justify-between px-2"
+      style={{ height: 28 }}
     >
       <nav aria-label="Menu bar" className="flex items-center">
         <button type="button" aria-label="Portfolio menu" onClick={onMark} className="mr-2 flex h-5 w-5 items-center justify-center overflow-hidden rounded-full" style={{ border: '1px solid rgba(255,255,255,0.6)' }}>
@@ -151,7 +151,7 @@ export function MenuBar({ mobile }: { mobile: boolean }) {
               {mobile ? 'Menu' : menu.label}
             </button>
             {openId === menu.id && (
-              <div role="menu" aria-label={menu.label} className="win-in absolute left-0 top-[26px] min-w-[210px] rounded-lg py-1" style={{ background: 'var(--chrome)', color: 'var(--ink)', border: '1px solid var(--hairline)', boxShadow: '0 14px 36px rgba(0,0,0,0.4)' }}>
+              <div role="menu" aria-label={menu.label} className="win-in glass absolute left-0 top-[26px] min-w-[210px] rounded-xl p-1">
                 {menu.items.map((item, index) =>
                   item === 'sep' ? (
                     <hr key={index} className="my-1 border-0 border-t" style={{ borderColor: 'var(--hairline)' }} />
@@ -162,7 +162,7 @@ export function MenuBar({ mobile }: { mobile: boolean }) {
                       role="menuitem"
                       disabled={item.disabled}
                       onClick={() => { setOpenId(null); item.action(); }}
-                      className="flex w-full items-center justify-between px-3 py-[5px] text-left text-[12.5px] disabled:opacity-40"
+                      className="row-hover flex w-full items-center justify-between rounded-md px-3 py-[5px] text-left text-[12.5px] disabled:opacity-40"
                     >
                       <span>{item.label}</span>
                       {item.shortcut && <span className="ml-6 text-[11px]" style={{ color: 'var(--muted)' }}>{item.shortcut}</span>}

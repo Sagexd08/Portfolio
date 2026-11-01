@@ -1,4 +1,4 @@
-import { Suspense, useRef, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
+import { Suspense, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
 import { APP_COMPONENTS, APP_ICONS } from './apps';
 import { ErrorBoundary } from './ErrorBoundary';
 import {
@@ -65,10 +65,18 @@ function TrafficLight({ label, color, onClick }: { label: string; color: string;
   );
 }
 
+const EXIT_MS = 200;
+
 export function WindowFrame({ win, focused, mobile }: Props) {
+  const [exit, setExit] = useState<'close' | 'min' | null>(null);
   const AppView = APP_COMPONENTS[win.app];
   const drag = useRef<{ dx: number; dy: number } | null>(null);
   const canDrag = !mobile && !win.isMaximized;
+
+  const leave = (kind: 'close' | 'min', done: (id: string) => void): void => {
+    setExit(kind);
+    window.setTimeout(() => { done(win.id); setExit(null); }, kind === 'min' ? 280 : EXIT_MS);
+  };
 
   const startDrag = (event: ReactPointerEvent<HTMLElement>): void => {
     if (!canDrag || event.button !== 0) return;
@@ -84,31 +92,30 @@ export function WindowFrame({ win, focused, mobile }: Props) {
     <section
       role="dialog"
       aria-label={win.title}
-      className="win-in fixed flex flex-col overflow-hidden"
+      className={`${exit ? `win-${exit}` : 'win-in'} glass-win fixed flex flex-col overflow-hidden`}
       style={{
         ...frameStyle(win, mobile),
         display: win.isMinimized ? 'none' : 'flex',
-        background: 'var(--surface)',
-        border: '1px solid var(--hairline)',
-        borderRadius: mobile ? 0 : 'var(--radius)',
-        boxShadow: focused ? '0 18px 50px rgba(0,0,0,0.38)' : '0 8px 24px rgba(0,0,0,0.22)',
+        borderRadius: mobile ? 0 : 18,
+        opacity: focused || exit ? undefined : 0.97,
+        boxShadow: focused ? undefined : '0 6px 20px rgba(0,0,0,0.18)',
       }}
       onPointerDownCapture={() => focusWindow(win.id)}
     >
       <header
         className="flex h-[38px] flex-none items-center gap-3 px-3"
-        style={{ background: 'var(--chrome)', borderBottom: '1px solid var(--hairline)', cursor: canDrag ? 'grab' : 'default', touchAction: 'none' }}
+        style={{ background: 'color-mix(in srgb, var(--chrome) 70%, transparent)', borderBottom: '1px solid var(--hairline)', cursor: canDrag ? 'grab' : 'default', touchAction: 'none' }}
         onPointerDown={startDrag}
         onPointerMove={onDrag}
         onPointerUp={() => (drag.current = null)}
         onDoubleClick={() => !mobile && toggleMaximize(win.id)}
       >
         <div className="flex gap-2">
-          <TrafficLight label="Close" color="#e5645a" onClick={() => closeWindow(win.id)} />
-          {!mobile && <TrafficLight label="Minimize" color="#e0b44a" onClick={() => minimizeWindow(win.id)} />}
+          <TrafficLight label="Close" color="#e5645a" onClick={() => leave('close', closeWindow)} />
+          {!mobile && <TrafficLight label="Minimize" color="#e0b44a" onClick={() => leave('min', minimizeWindow)} />}
           {!mobile && <TrafficLight label={win.isMaximized ? 'Restore' : 'Maximize'} color="#5cb870" onClick={() => toggleMaximize(win.id)} />}
         </div>
-        <span className="flex h-4 w-4 items-center" style={{ color: 'var(--muted)', opacity: focused ? 1 : 0.6 }}>
+        <span className="flex h-4 w-4 items-center" style={{ opacity: focused ? 1 : 0.6 }}>
           {APP_ICONS[win.app]}
         </span>
         <h2 className="m-0 truncate text-[13px] font-medium" style={{ color: focused ? 'var(--ink)' : 'var(--muted)' }}>

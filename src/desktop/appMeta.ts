@@ -24,9 +24,12 @@ export const APP_META: Record<AppId, AppMeta> = {
   playground: { title: 'Playground', path: '/playground', width: 720, height: 560, description: 'A neural network trained live in your browser.' },
   snake: { title: 'Snake', path: '/snake', width: 440, height: 520, description: 'A tiny Snake game. Beat your best score.' },
   embeddings: { title: 'Embedding Space', path: '/embeddings', width: 760, height: 600, description: 'The portfolio knowledge base, embedded and projected to 2D.' },
+  browser: { title: 'Browser', path: '/browser', width: 960, height: 620, description: 'A small browser with shortcuts to Sohom’s links.' },
+  linkedin: { title: 'LinkedIn', path: '/linkedin', width: 680, height: 640, description: 'Sohom’s professional profile: experience and education.' },
+  music: { title: 'Music', path: '/music', width: 760, height: 560, description: 'A lofi playlist player powered by YouTube embeds.' },
 };
 
-export const DOCK_ORDER: AppId[] = ['finder', 'notes', 'about', 'projects', 'resume', 'open-source', 'maps', 'gallery', 'assistant', 'contact'];
+export const DOCK_ORDER: AppId[] = ['finder', 'notes', 'about', 'projects', 'resume', 'open-source', 'maps', 'gallery', 'assistant', 'browser', 'linkedin', 'music', 'contact'];
 
 /** Apps shown in Launchpad and Spotlight (hidden easter-egg apps are excluded). */
 export const LAUNCHABLE: AppId[] = [...DOCK_ORDER, 'snake', 'help'];

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { composeAnswer, isGrounded, type Source } from '../ai/extractive';
 import { buildMessages } from '../ai/prompt';
 import { retrieve, type Hit } from '../ai/retrieve';
-import { embedQuery, generate, isReady, loadEmbedder, loadSlm, modelsConfigured, webgpuAvailable } from '../ai/slm';
+import { embedQuery, generate, generateRemote, isReady, loadEmbedder, loadSlm, modelsConfigured, webgpuAvailable } from '../ai/slm';
 import { setAiStatus } from '../ai/status';
 import { startListening, voiceSupported } from '../ai/voice';
 import { openApp } from '../desktop/store';
@@ -83,7 +83,7 @@ export default function AssistantApp({ params }: AppProps) {
       const { hits, path } = await retrieve(question, 5, vector, abort.current.signal);
       const answer = composeAnswer(question, hits);
       const id = push({ role: 'assistant', text: answer.text, sources: answer.sources, label: `Extractive · ${path}` });
-      if (slmOn && !answer.refused) await refine(id, question, hits, answer.sources, path);
+      if (!answer.refused) await refine(id, question, hits, answer.sources, path);
       setAiStatus({ phase: 'opened' });
     } catch (error) {
       if ((error as Error).name === 'AbortError') setAiStatus({ phase: 'opened' });
@@ -97,11 +97,22 @@ export default function AssistantApp({ params }: AppProps) {
   };
 
   const refine = async (id: number, question: string, hits: Hit[], sources: Source[], path: string): Promise<void> => {
-    setAiStatus({ phase: 'responding' });
+    const local = slmOn;
+    const name = local ? 'On-device SLM' : 'Hosted SLM';
     let draft = '';
-    const text = await generate(buildMessages(question, hits), (token) => { draft += token; patch(id, { label: 'On-device SLM · writing…' }); }, abort.current?.signal);
+    const onToken = (token: string): void => { draft += token; patch(id, { label: `${name} · writing…` }); };
+    const messages = buildMessages(question, hits);
+    let text: string;
+    setAiStatus({ phase: 'responding' });
+    try {
+      text = local ? await generate(messages, onToken, abort.current?.signal) : await generateRemote(messages, onToken, abort.current?.signal);
+    } catch (error) {
+      if (local || (error as Error).name === 'AbortError') throw error;
+      patch(id, { label: `Extractive · ${path}` });
+      return;
+    }
     const final = (text || draft).trim();
-    if (final && isGrounded(final, hits)) patch(id, { text: final, sources, label: `On-device SLM · checked against sources · ${path}` });
+    if (final && isGrounded(final, hits)) patch(id, { text: final, sources, label: `${name} · checked against sources${local ? ` · ${path}` : ''}` });
     else patch(id, { label: `Extractive · SLM draft rejected (not grounded) · ${path}` });
   };
 
