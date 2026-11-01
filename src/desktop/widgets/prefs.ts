@@ -6,7 +6,7 @@ export const WIDGET_LABELS: Record<WidgetId, string> = {
   clock: 'Clock',
   calendar: 'Calendar',
   worldclock: 'World clocks',
-  minime: 'Mini me (3D)',
+  minime: 'Sage (mascot)',
   focus: 'Focus timer',
   goals: 'Goals',
   stack: 'Tech stack',
@@ -24,7 +24,7 @@ export interface MiniMeStyle {
   skin: string;
   hair: string;
 }
-export const DEFAULT_STYLE: MiniMeStyle = { shirt: '#b3262e', skin: '#e0ac86', hair: '#1c1a1a' };
+export const DEFAULT_STYLE: MiniMeStyle = { shirt: '#b3262e', skin: '#cf9870', hair: '#1b1613' };
 
 interface Prefs {
   on: WidgetId[];

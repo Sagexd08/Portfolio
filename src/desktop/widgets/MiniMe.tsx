@@ -1,156 +1,94 @@
-import { useEffect, useMemo, useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { useEffect, useId, useRef } from 'react';
 import { DEFAULT_STYLE, setMiniMeStyle, useWidgetPrefs, type MiniMeStyle } from './prefs';
 import { Card, muted } from './Card';
 
 const SHIRTS = ['#b3262e', '#1d4ed8', '#0f766e', '#7c3aed', '#111827', '#f59e0b'];
-const SKINS = ['#f1c9a5', '#e0ac86', '#c68642', '#8d5524', '#5c3a21'];
-const HAIRS = ['#1c1a1a', '#4a2c17', '#a56b2a', '#d9b25f', '#7a7a7a'];
+const SKINS = ['#f1c9a5', '#cf9870', '#c68642', '#8d5524', '#5c3a21'];
+const HAIRS = ['#1b1613', '#4a2c17', '#a56b2a', '#d9b25f', '#7a7a7a'];
+const INK = '#1a1414';
 
-function plaidTexture(base: string): THREE.CanvasTexture | null {
-  const canvas = document.createElement('canvas');
-  canvas.width = 128;
-  canvas.height = 128;
-  const g = canvas.getContext('2d');
-  if (!g) return null;
-  g.fillStyle = base;
-  g.fillRect(0, 0, 128, 128);
-  g.fillStyle = 'rgba(0,0,0,0.28)';
-  g.fillRect(0, 28, 128, 22);
-  g.fillRect(28, 0, 22, 128);
-  g.fillStyle = 'rgba(255,255,255,0.18)';
-  g.fillRect(0, 88, 128, 6);
-  g.fillRect(88, 0, 6, 128);
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(3, 3);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  return texture;
-}
+/** Crown curls: messy dark hair like the reference portrait. */
+const CURLS: [number, number][] = [[66, 54], [80, 41], [98, 35], [116, 39], [132, 48], [143, 66], [58, 72]];
 
-function webglSupported(): boolean {
-  try {
-    const canvas = document.createElement('canvas');
-    return Boolean(canvas.getContext('webgl2') ?? canvas.getContext('webgl'));
-  } catch {
-    return false;
-  }
-}
+function Mascot({ style }: { style: MiniMeStyle }) {
+  const uid = useId().replace(/[^a-zA-Z0-9]/g, '');
+  const plaid = `plaid${uid}`;
+  const box = useRef<HTMLDivElement>(null);
 
-const reducedMotion = (): boolean => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-function Avatar({ style, still }: { style: MiniMeStyle; still: boolean }) {
-  const root = useRef<THREE.Group>(null);
-  const head = useRef<THREE.Group>(null);
-  const arm = useRef<THREE.Group>(null);
-  const hand = useRef<THREE.Group>(null);
-  const eyes = useRef<THREE.Group>(null);
-  const pointer = useRef({ x: 0, y: 0 });
-  const plaid = useMemo(() => plaidTexture(style.shirt), [style.shirt]);
-
-  useEffect(() => () => plaid?.dispose(), [plaid]);
   useEffect(() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    let frame = 0;
     const move = (e: PointerEvent): void => {
-      pointer.current = { x: (e.clientX / window.innerWidth) * 2 - 1, y: (e.clientY / window.innerHeight) * 2 - 1 };
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const x = (e.clientX / window.innerWidth) * 2 - 1;
+        const y = (e.clientY / window.innerHeight) * 2 - 1;
+        box.current?.style.setProperty('--hx', `${(x * 4).toFixed(2)}px`);
+        box.current?.style.setProperty('--hy', `${(y * 3).toFixed(2)}px`);
+        box.current?.style.setProperty('--hr', `${(x * 4).toFixed(2)}deg`);
+      });
     };
     window.addEventListener('pointermove', move, { passive: true });
-    return () => window.removeEventListener('pointermove', move);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('pointermove', move);
+    };
   }, []);
 
-  useFrame(({ clock }) => {
-    const t = still ? 0 : clock.elapsedTime;
-    if (root.current) root.current.position.y = -0.75 + Math.sin(t * 1.6) * 0.03;
-    if (head.current) {
-      head.current.rotation.y += (pointer.current.x * 0.6 - head.current.rotation.y) * 0.08;
-      head.current.rotation.x += (pointer.current.y * 0.3 - head.current.rotation.x) * 0.08;
-    }
-    if (arm.current) arm.current.rotation.z = 2.3 + Math.sin(t * 3) * 0.07;
-    if (arm.current && hand.current) hand.current.rotation.z = -arm.current.rotation.z;
-    if (eyes.current) eyes.current.scale.y = Math.sin(t * 0.9) > 0.985 ? 0.1 : 1;
-  });
-
-  const shirt = { color: plaid ? '#ffffff' : style.shirt, map: plaid ?? undefined, roughness: 0.85 };
+  const line = { stroke: INK, strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round' } as const;
   return (
-    <group ref={root}>
-      <mesh position={[0, 0.2, 0]}>
-        <capsuleGeometry args={[0.5, 0.7, 8, 16]} />
-        <meshStandardMaterial {...shirt} />
-      </mesh>
-      <mesh position={[0, 0.78, 0]}>
-        <cylinderGeometry args={[0.16, 0.2, 0.2, 16]} />
-        <meshStandardMaterial color={style.skin} roughness={0.7} />
-      </mesh>
-      <group ref={head} position={[0, 1.35, 0]}>
-        <mesh>
-          <sphereGeometry args={[0.55, 32, 24]} />
-          <meshStandardMaterial color={style.skin} roughness={0.7} />
-        </mesh>
-        <mesh position={[0, 0.03, -0.04]} rotation={[-0.35, 0, 0]}>
-          <sphereGeometry args={[0.58, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
-          <meshStandardMaterial color={style.hair} roughness={0.9} />
-        </mesh>
-        {[-1, 1].map((s) => (
-          <mesh key={s} position={[s * 0.55, -0.02, 0]}>
-            <sphereGeometry args={[0.1, 16, 12]} />
-            <meshStandardMaterial color={style.skin} roughness={0.7} />
-          </mesh>
-        ))}
-        <group ref={eyes}>
-          {[-1, 1].map((s) => (
-            <mesh key={s} position={[s * 0.19, 0.08, 0.5]}>
-              <sphereGeometry args={[0.06, 12, 12]} />
-              <meshStandardMaterial color="#14110f" />
-            </mesh>
-          ))}
-        </group>
-        {[-1, 1].map((s) => (
-          <mesh key={s} position={[s * 0.19, 0.08, 0.52]}>
-            <torusGeometry args={[0.15, 0.018, 12, 32]} />
-            <meshStandardMaterial color="#1f2937" metalness={0.4} roughness={0.4} />
-          </mesh>
-        ))}
-        <mesh position={[0, 0.09, 0.52]}>
-          <boxGeometry args={[0.08, 0.02, 0.02]} />
-          <meshStandardMaterial color="#1f2937" />
-        </mesh>
-        <mesh position={[0, -0.04, 0.54]}>
-          <sphereGeometry args={[0.055, 12, 12]} />
-          <meshStandardMaterial color={style.skin} roughness={0.7} />
-        </mesh>
-        <mesh position={[0, -0.18, 0.5]} rotation={[0, 0, Math.PI]}>
-          <torusGeometry args={[0.2, 0.025, 8, 24, Math.PI]} />
-          <meshStandardMaterial color="#7a2e2e" />
-        </mesh>
-      </group>
-      <group position={[-0.62, 0.55, 0]} rotation={[0, 0, 0.25]}>
-        <mesh position={[0, -0.4, 0]}>
-          <capsuleGeometry args={[0.13, 0.55, 6, 12]} />
-          <meshStandardMaterial {...shirt} />
-        </mesh>
-        <mesh position={[0, -0.82, 0]}>
-          <sphereGeometry args={[0.14, 16, 12]} />
-          <meshStandardMaterial color={style.skin} roughness={0.7} />
-        </mesh>
-      </group>
-      <group ref={arm} position={[0.62, 0.55, 0]} rotation={[0, 0, 2.3]}>
-        <mesh position={[0, -0.4, 0]}>
-          <capsuleGeometry args={[0.13, 0.55, 6, 12]} />
-          <meshStandardMaterial {...shirt} />
-        </mesh>
-        <group ref={hand} position={[0, -0.82, 0]}>
-          <mesh>
-            <sphereGeometry args={[0.16, 16, 12]} />
-            <meshStandardMaterial color={style.skin} roughness={0.7} />
-          </mesh>
-          <mesh position={[0, 0.2, 0.02]}>
-            <capsuleGeometry args={[0.06, 0.14, 6, 10]} />
-            <meshStandardMaterial color={style.skin} roughness={0.7} />
-          </mesh>
-        </group>
-      </group>
-    </group>
+    <div ref={box} className="sage" role="img" aria-label="Sage, a cartoon mascot of Sohom with round glasses and curly hair, giving a thumbs up">
+      <svg viewBox="0 0 200 200" width="100%" height="100%" aria-hidden="true">
+        <defs>
+          <pattern id={plaid} width="24" height="24" patternUnits="userSpaceOnUse">
+            <rect width="24" height="24" fill={style.shirt} />
+            <rect y="5" width="24" height="9" fill="rgba(12,10,16,0.62)" />
+            <rect x="5" width="9" height="24" fill="rgba(12,10,16,0.62)" />
+            <rect y="19" width="24" height="1.6" fill="rgba(0,0,0,0.5)" />
+            <rect x="19" width="1.6" height="24" fill="rgba(0,0,0,0.5)" />
+          </pattern>
+        </defs>
+        <g className="sage-bob">
+          <rect x="89" y="116" width="22" height="26" rx="8" fill={style.skin} {...line} />
+          <path d="M40 202 C40 152 70 136 100 136 C130 136 160 152 160 202 Z" fill={`url(#${plaid})`} {...line} />
+          <path d="M83 137 L100 160 L117 137 Z" fill={style.skin} {...line} strokeWidth={3} />
+          <path d="M96 175 h8 v6 h-8z" fill={INK} opacity="0.55" />
+          <g>
+            <path d="M52 152 C44 168 42 184 44 200" fill="none" stroke={INK} strokeWidth="26" strokeLinecap="round" />
+            <path d="M52 152 C44 168 42 184 44 200" fill="none" stroke={`url(#${plaid})`} strokeWidth="19" strokeLinecap="round" />
+          </g>
+          <g className="sage-arm">
+            <path d="M148 152 C168 148 176 132 172 112" fill="none" stroke={INK} strokeWidth="26" strokeLinecap="round" />
+            <path d="M148 152 C168 148 176 132 172 112" fill="none" stroke={`url(#${plaid})`} strokeWidth="19" strokeLinecap="round" />
+            <ellipse cx="172" cy="88" rx="6.5" ry="12" fill={style.skin} {...line} strokeWidth={3.5} />
+            <circle cx="172" cy="104" r="12" fill={style.skin} {...line} strokeWidth={3.5} />
+            <path d="M163 105 h16 M164 110 h14" stroke={INK} strokeWidth="2" strokeLinecap="round" opacity="0.5" />
+          </g>
+          <g className="sage-head">
+            <circle cx="60" cy="92" r="8.5" fill={style.skin} {...line} strokeWidth={3} />
+            <circle cx="140" cy="92" r="8.5" fill={style.skin} {...line} strokeWidth={3} />
+            <ellipse cx="100" cy="86" rx="40" ry="44" fill={style.skin} {...line} />
+            <path d="M128 78 l-6 10 M133 90 l-6 10 M130 102 l-5 8" stroke={INK} strokeWidth="1.8" strokeLinecap="round" opacity="0.28" />
+            {CURLS.map(([x, y], i) => <circle key={i} cx={x} cy={y} r="12" fill={style.hair} {...line} strokeWidth={3} />)}
+            <path d="M58 80 C52 52 70 36 100 36 C130 36 148 52 142 80 C137 62 125 58 113 62 C105 52 93 54 87 62 C75 58 63 64 58 80 Z" fill={style.hair} {...line} strokeWidth={3} />
+            <path d="M74 50 l8 -6 M92 44 l6 -4 M108 44 l7 -3 M124 52 l8 -2 M66 66 l6 -5" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" opacity="0.18" />
+            <path d="M72 74 Q84 67 95 73 M105 73 Q116 67 128 74" fill="none" stroke={style.hair} strokeWidth="5" strokeLinecap="round" />
+            <path d="M72 74 Q84 67 95 73 M105 73 Q116 67 128 74" fill="none" stroke={INK} strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
+            <g className="sage-eyes">
+              <circle cx="84" cy="93" r="3.4" fill={INK} />
+              <circle cx="116" cy="93" r="3.4" fill={INK} />
+            </g>
+            <circle cx="84" cy="93" r="15" fill="rgba(255,255,255,0.18)" stroke={INK} strokeWidth="3" />
+            <circle cx="116" cy="93" r="15" fill="rgba(255,255,255,0.18)" stroke={INK} strokeWidth="3" />
+            <path d="M99 91 Q100 88 101 91 M69 90 L58 86 M131 90 L142 86" fill="none" stroke={INK} strokeWidth="3" strokeLinecap="round" />
+            <path d="M100 99 Q96 107 101 109" fill="none" stroke={INK} strokeWidth="2.4" strokeLinecap="round" opacity="0.7" />
+            <path d="M86 115 Q100 128 114 115" fill="#fff" stroke={INK} strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="73" cy="109" r="6" fill="#ff6b6b" opacity="0.28" />
+            <circle cx="127" cy="109" r="6" fill="#ff6b6b" opacity="0.28" />
+          </g>
+        </g>
+      </svg>
+    </div>
   );
 }
 
@@ -167,21 +105,11 @@ function Swatches({ label, colors, value, onPick }: { label: string; colors: rea
 
 export default function MiniMe() {
   const { style } = useWidgetPrefs();
-  const ok = useMemo(webglSupported, []);
-  const still = useMemo(reducedMotion, []);
   return (
-    <Card label="Mini me">
-      <div className="relative h-[190px] overflow-hidden rounded-xl" style={{ background: 'linear-gradient(160deg, color-mix(in srgb, var(--accent) 35%, transparent), transparent)' }}>
-        {ok ? (
-          <Canvas dpr={[1, 2]} camera={{ position: [0, 0.9, 4.4], fov: 34 }} frameloop={still ? 'demand' : 'always'} aria-label="3D cartoon of Sohom giving a thumbs up" role="img">
-            <ambientLight intensity={0.9} />
-            <directionalLight position={[2, 3, 4]} intensity={1.6} />
-            <Avatar style={style} still={still} />
-          </Canvas>
-        ) : (
-          <p className="m-0 flex h-full items-center justify-center text-[44px]" role="img" aria-label="Sohom giving a thumbs up">🙂👍</p>
-        )}
-        <span className="absolute bottom-2 left-2 rounded-full px-2 py-[2px] text-[11px] font-semibold text-white" style={{ background: 'rgba(0,0,0,0.45)' }}>I&apos;m okay 👍</span>
+    <Card label="Sage">
+      <div className="relative h-[190px] overflow-hidden rounded-xl" style={{ background: 'linear-gradient(160deg, color-mix(in srgb, var(--accent) 38%, transparent), transparent)' }}>
+        <Mascot style={style} />
+        <span className="absolute bottom-2 left-2 rounded-full px-2 py-[2px] text-[11px] font-semibold text-white" style={{ background: 'rgba(0,0,0,0.45)' }}>Sage · I&apos;m okay 👍</span>
       </div>
       <div className="mt-2 space-y-1">
         <Swatches label="Shirt" colors={SHIRTS} value={style.shirt} onPick={(shirt) => setMiniMeStyle({ shirt })} />
