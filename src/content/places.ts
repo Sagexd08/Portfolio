@@ -31,7 +31,7 @@ export const PLACES: readonly Place[] = [
     lat: 22.5726,
     lng: 88.3639,
     blurb: 'Home base. Open to remote and on-site forward-deployed or ML engineering roles, anywhere.',
-    videos: [{ id: 'VwrxJihxF3w', title: 'Victoria Memorial Kolkata: full tour guide', channel: 'Armaan Pakhi' }],
+    videos: [],
   },
   {
     id: 'san-francisco',

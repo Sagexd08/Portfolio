@@ -18,7 +18,7 @@ function Details({ place, playing, onPlay }: { place: Place; playing: PlaceVideo
         <p className="m-0 text-[12px]" style={muted}>{KIND_LABEL[place.kind]}{place.id === HOME_ID ? '' : ` · ${km.toLocaleString()} km from Kolkata`}</p>
         <p className="m-0 mt-1 text-[12.5px]">{place.blurb}</p>
         <a href={`https://www.openstreetmap.org/?mlat=${place.lat}&mlon=${place.lng}#map=12/${place.lat}/${place.lng}`} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-[12px] underline">Open in OpenStreetMap</a>
-        <ul className="m-0 mt-2 flex list-none gap-2 overflow-x-auto p-0">
+        <ul className="m-0 mt-2 flex list-none gap-2 overflow-x-auto p-0" hidden={place.videos.length === 0}>
           {place.videos.map((v) => (
             <li key={v.id} className="w-[120px] flex-none">
               <button type="button" onClick={() => onPlay(v)} aria-label={`Play ${v.title}`} aria-current={playing?.id === v.id} className="row-hover block w-full rounded-lg p-0.5 text-left">
