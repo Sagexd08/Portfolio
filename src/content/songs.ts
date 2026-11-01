@@ -18,4 +18,6 @@ export const songs: Song[] = [
   { title: 'F1', artist: 'Hans Zimmer', youtubeId: 'YhX_Woa3kVA' },
   { title: 'Cornfield Chase', artist: 'Hans Zimmer', youtubeId: '7GlsxNI4LVI' },
   { title: 'Sunsetz', artist: 'Cigarettes After Sex', youtubeId: 'eVRbaYq5Aw4' },
+  { title: 'her', artist: 'JVKE', youtubeId: 'xITJ35Kwpv4' },
+  { title: 'A Thousand Years (Cinematic Version)', artist: 'John Michael Howell', youtubeId: 'pynfkn95tQc' },
 ];
