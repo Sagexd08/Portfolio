@@ -7,6 +7,8 @@ export interface Prefs {
   dnd: boolean;
   reduceMotion: boolean;
   wallpaper: string;
+  /** Glass tint 0..1, drives --glass-tint. */
+  glass: number;
 }
 
 export const WALLPAPERS: { key: string; label: string }[] = [
@@ -19,7 +21,7 @@ export const WALLPAPERS: { key: string; label: string }[] = [
 ];
 
 const KEY = 'portfolio.prefs.v1';
-const DEFAULTS: Prefs = { theme: 'auto', dnd: false, reduceMotion: false, wallpaper: DEFAULT_WALLPAPER };
+const DEFAULTS: Prefs = { theme: 'auto', dnd: false, reduceMotion: false, wallpaper: DEFAULT_WALLPAPER, glass: 0.5 };
 
 function read(): Prefs {
   try {
@@ -38,6 +40,7 @@ function apply(prefs: Prefs): void {
   if (prefs.theme === 'auto') root.removeAttribute('data-theme');
   else root.setAttribute('data-theme', prefs.theme);
   root.toggleAttribute('data-reduce-motion', prefs.reduceMotion);
+  root.style.setProperty('--glass-tint', String(prefs.glass));
   root.setAttribute('data-wallpaper', prefs.wallpaper);
   root.setAttribute('data-wallpaper-kind', isPhoto(prefs.wallpaper) ? 'photo' : 'gradient');
 }

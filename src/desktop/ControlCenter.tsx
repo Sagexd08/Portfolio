@@ -11,7 +11,7 @@ const THEMES: { key: Theme; label: string }[] = [
 
 function Toggle({ label, hint, on, onChange }: { label: string; hint: string; on: boolean; onChange: (value: boolean) => void }) {
   return (
-    <button type="button" role="switch" aria-checked={on} onClick={() => onChange(!on)} className="flex w-full items-center justify-between rounded-xl p-3 text-left" style={{ background: 'var(--surface)', border: '1px solid var(--hairline)' }}>
+    <button type="button" role="switch" aria-checked={on} onClick={() => onChange(!on)} className="cc-card flex w-full items-center justify-between p-3 text-left">
       <span>
         <span className="block text-[13px] font-medium">{label}</span>
         <span className="block text-[11.5px]" style={{ color: 'var(--muted)' }}>{hint}</span>
@@ -31,7 +31,7 @@ export function ControlCenter() {
   if (!active) return null;
   return (
     <section ref={ref} aria-label="Control Center" className="win-in glass fixed right-2 top-[34px] z-[24000] w-[min(94vw,320px)] space-y-2 p-3" style={{ borderRadius: 26 }}>
-      <div className="rounded-xl p-3" style={{ background: 'var(--surface)', border: '1px solid var(--hairline)' }}>
+      <div className="cc-card p-3">
         <p className="m-0 mb-2 text-[12px] font-semibold" style={{ color: 'var(--muted)' }}>Appearance</p>
         <div className="flex gap-1" role="radiogroup" aria-label="Appearance">
           {THEMES.map((theme) => (
@@ -41,7 +41,7 @@ export function ControlCenter() {
           ))}
         </div>
       </div>
-      <div className="rounded-xl p-3" style={{ background: 'var(--surface)', border: '1px solid var(--hairline)' }}>
+      <div className="cc-card p-3">
         <p className="m-0 mb-2 text-[12px] font-semibold" style={{ color: 'var(--muted)' }}>Wallpaper</p>
         <div className="flex flex-wrap gap-1" role="radiogroup" aria-label="Wallpaper">
           {WALLPAPERS.map((wp) => (
@@ -54,11 +54,15 @@ export function ControlCenter() {
           <p className="m-0 mt-2 text-[11px]" style={{ color: 'var(--muted)' }}>{PHOTOS.find((p) => p.key === prefs.wallpaper)?.credit}</p>
         )}
       </div>
+      <div className="cc-card p-3">
+        <label className="m-0 mb-2 block text-[12px] font-semibold" htmlFor="glass-tint" style={{ color: 'var(--label-secondary)' }}>Glass</label>
+        <input id="glass-tint" type="range" min={0} max={1} step={0.01} value={prefs.glass} onChange={(event) => setPrefs({ glass: Number(event.target.value) })} className="w-full" style={{ accentColor: 'var(--accent)' }} />
+      </div>
       <Toggle label="Do Not Disturb" hint="Silence pop-up notifications" on={prefs.dnd} onChange={(value) => setPrefs({ dnd: value })} />
       <Toggle label="Reduce Motion" hint="Turn off window and dock animation" on={prefs.reduceMotion} onChange={(value) => setPrefs({ reduceMotion: value })} />
       <div className="flex gap-2">
-        <button type="button" onClick={() => openOverlay('notifications')} className="flex-1 rounded-xl p-2 text-[12.5px]" style={{ background: 'var(--surface)', border: '1px solid var(--hairline)' }}>Notifications</button>
-        <button type="button" onClick={() => { closeOverlay(); openOverlay('spotlight'); }} className="flex-1 rounded-xl p-2 text-[12.5px]" style={{ background: 'var(--surface)', border: '1px solid var(--hairline)' }}>Spotlight</button>
+        <button type="button" onClick={() => openOverlay('notifications')} className="cc-card flex-1 p-2 text-[12.5px]">Notifications</button>
+        <button type="button" onClick={() => { closeOverlay(); openOverlay('spotlight'); }} className="cc-card flex-1 p-2 text-[12.5px]">Spotlight</button>
       </div>
     </section>
   );

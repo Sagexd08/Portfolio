@@ -1,0 +1,43 @@
+/* Dock-only styles: tooltip bubble, badge and divider. --s is the live magnification scale set by Dock.tsx. */
+.dock-tip {
+  position: absolute;
+  bottom: calc(100% + 52px * (var(--s, 1) - 1) + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: none;
+  white-space: nowrap;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 120ms ease-out;
+}
+.dock-slot:hover .dock-tip,
+.dock-slot:focus-within .dock-tip {
+  opacity: 1;
+}
+.dock-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: linear-gradient(#ff6a5f, #e5281d);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 0 0.5px rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+.dock-divider {
+  align-self: center;
+  width: 1px;
+  height: 40px;
+  margin: 0 5px 6px;
+  background: color-mix(in srgb, var(--ink, #fff) 25%, transparent);
+}

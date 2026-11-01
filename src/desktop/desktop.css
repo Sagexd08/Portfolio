@@ -1,0 +1,13 @@
+.lock-screen { transition: opacity 400ms ease, transform 400ms ease; }
+.lock-screen[data-leaving='true'] { opacity: 0; transform: scale(1.06); }
+.lock-clock { font-size: clamp(72px, 12vw, 160px); font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.04em; line-height: 1; font-stretch: condensed; }
+.lock-pill { border: 1px solid rgba(255,255,255,0.35); background: rgba(255,255,255,0.14); backdrop-filter: blur(12px); }
+.lock-pill:hover, .lock-pill:focus-visible { background: rgba(255,255,255,0.28); }
+.mc-card { transition: transform 200ms ease; }
+.mc-card:hover, .mc-card:focus-visible { transform: scale(1.04); outline: 2px solid var(--accent, #0a84ff); outline-offset: 3px; }
+.widget { border-radius: 20px; }
+@media (prefers-reduced-motion: reduce) {
+  .lock-screen, .mc-card { transition: none; }
+  .lock-screen[data-leaving='true'] { transform: none; }
+  .mc-card:hover, .mc-card:focus-visible { transform: none; }
+}

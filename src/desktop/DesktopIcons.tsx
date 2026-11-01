@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { profile } from '../content/portfolio';
 import { notify } from './notify';
-import { launchApp } from './store';
+import { launchApp, openApp } from './store';
 import type { AppId } from './types';
 
 interface DesktopItem {
   id: string;
   label: string;
-  glyph: 'folder' | 'pdf' | 'photos';
+  glyph: 'folder' | 'pdf' | 'photos' | 'txt';
   open: () => void;
 }
 
@@ -22,6 +22,7 @@ const downloadResume = (): void => {
 const folder = (app: AppId) => (): void => launchApp(app);
 
 const ITEMS: DesktopItem[] = [
+  { id: 'readme', label: 'read-me.txt', glyph: 'txt', open: () => openApp('notes', { note: 'intro' }) },
   { id: 'resume', label: 'Resume.pdf', glyph: 'pdf', open: downloadResume },
   { id: 'projects', label: 'Projects', glyph: 'folder', open: folder('projects') },
   { id: 'pictures', label: 'Pictures', glyph: 'photos', open: folder('gallery') },
@@ -29,10 +30,16 @@ const ITEMS: DesktopItem[] = [
 ];
 
 function Glyph({ kind }: { kind: DesktopItem['glyph'] }) {
-  const fill = kind === 'pdf' ? '#f4f3f0' : kind === 'photos' ? '#8fb0e6' : '#6d9bd8';
+  const fill = kind === 'pdf' || kind === 'txt' ? '#f4f3f0' : kind === 'photos' ? '#8fb0e6' : '#6d9bd8';
   return (
     <svg viewBox="0 0 56 56" width="52" height="52" aria-hidden="true">
-      {kind === 'pdf' ? (
+      {kind === 'txt' ? (
+        <>
+          <path d="M14 6h22l10 10v34H14z" fill={fill} stroke="#bdbbb6" />
+          <path d="M36 6v10h10" fill="#dcdad5" stroke="#bdbbb6" />
+          <path d="M20 26h20M20 32h20M20 38h14" stroke="#9a9890" strokeWidth="2" />
+        </>
+      ) : kind === 'pdf' ? (
         <>
           <path d="M14 6h22l10 10v34H14z" fill={fill} stroke="#bdbbb6" />
           <path d="M36 6v10h10" fill="#dcdad5" stroke="#bdbbb6" />

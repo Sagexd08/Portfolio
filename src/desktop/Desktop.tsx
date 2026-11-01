@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { setAiStatus } from '../ai/status';
 import { APP_META, appFromPath, pathFor } from './appMeta';
@@ -14,8 +14,11 @@ import { Wallpaper } from './Wallpaper';
 import { initPrefs } from './prefs';
 import { Spotlight } from './Spotlight';
 import { Eggs } from './Eggs';
+import { DesktopMenu } from './DesktopMenu';
+import { MissionControl } from './MissionControl';
+import { Widgets, widgetsVisible, WIDGET_MIN_VIEWPORT, WIDGET_RIGHT, WIDGET_WIDTH } from './Widgets';
 import { MenuBar } from './MenuBar';
-import { getDesktop, launchApp, openApp, useDesktop } from './store';
+import { DOCK_RESERVE, getDesktop, launchApp, MENU_BAR_HEIGHT, moveWindow, openApp, resizeWindow, useDesktop } from './store';
 import { useIsMobile } from './useMedia';
 import { WindowFrame } from './Window';
 
@@ -66,12 +69,40 @@ function applyPageMeta(title: string, description: string, path: string): void {
   canonical.href = SITE + path;
 }
 
+const TILE_MIN_VIEWPORT = 1024;
+const TILE_GAP = 10;
+const ICON_RESERVE = 108;
+
+/** Open Notes, VS Code and Terminal in a non-overlapping layout clear of icons, widgets and Dock. */
+function tileFirstLoad(): void {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const left = 12;
+  const right = w - ICON_RESERVE - (w >= WIDGET_MIN_VIEWPORT && widgetsVisible() ? WIDGET_WIDTH + (WIDGET_RIGHT - ICON_RESERVE) + TILE_GAP + 12 : 0);
+  const top = MENU_BAR_HEIGHT + 8;
+  const height = h - DOCK_RESERVE - top;
+  const leftW = Math.floor((right - left - TILE_GAP) * 0.42);
+  const rightW = right - left - TILE_GAP - leftW;
+  const topH = Math.floor((height - TILE_GAP) * 0.58);
+  openApp('vscode');
+  openApp('terminal');
+  openApp('notes');
+  const place = (id: string, x: number, y: number, width: number, hh: number): void => {
+    resizeWindow(id, { width, height: hh });
+    moveWindow(id, { x, y });
+  };
+  place('win-notes', left, top, leftW, height);
+  place('win-vscode', left + leftW + TILE_GAP, top, rightW, topH);
+  place('win-terminal', left + leftW + TILE_GAP, top + topH + TILE_GAP, rightW, height - topH - TILE_GAP);
+}
+
 export default function Desktop() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { windows, focusedId } = useDesktop();
   const mobile = useIsMobile();
   const [booted, setBooted] = useState(readBootFlag);
+  const firstVisit = useRef(!readBootFlag());
 
   const finishBoot = useCallback(() => {
     writeBootFlag();
@@ -84,6 +115,12 @@ export default function Desktop() {
     if (target) openApp(target.app, target.params);
     else openApp('help', { missing: pathname });
   }, [pathname, booted]);
+
+  useEffect(() => {
+    if (!booted || !firstVisit.current) return;
+    firstVisit.current = false;
+    if (pathname === '/' && window.innerWidth >= TILE_MIN_VIEWPORT && !mobile) tileFirstLoad();
+  }, [booted, pathname, mobile]);
 
   const focused = windows.find((win) => win.id === focusedId);
   const focusedApp = focused?.app;
@@ -138,6 +175,7 @@ export default function Desktop() {
         ))}
       </main>
       <DesktopIcons hidden={mobile} />
+      {!mobile && <Widgets />}
       <Dock mobile={mobile} />
       <Spotlight />
       <NotificationCenter />
@@ -145,6 +183,8 @@ export default function Desktop() {
       <Launchpad />
       <Toasts />
       <Eggs />
+      <DesktopMenu />
+      <MissionControl />
       {!booted && <BootScreen onDone={finishBoot} />}
     </div>
   );
