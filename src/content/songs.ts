@@ -17,4 +17,5 @@ export const songs: Song[] = [
   { title: 'Pusher', artist: 'Justice, Gesaffelstein', youtubeId: 'XEV73LaZ6JQ' },
   { title: 'F1', artist: 'Hans Zimmer', youtubeId: 'YhX_Woa3kVA' },
   { title: 'Cornfield Chase', artist: 'Hans Zimmer', youtubeId: '7GlsxNI4LVI' },
+  { title: 'Sunsetz', artist: 'Cigarettes After Sex', youtubeId: 'eVRbaYq5Aw4' },
 ];
