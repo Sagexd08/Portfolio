@@ -6,6 +6,12 @@
 .mc-card { transition: transform 200ms ease; }
 .mc-card:hover, .mc-card:focus-visible { transform: scale(1.04); outline: 2px solid var(--accent, #0a84ff); outline-offset: 3px; }
 .widget { border-radius: 20px; }
+.widget-column { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.3) transparent; overscroll-behavior: contain; }
+.widget-column::-webkit-scrollbar { width: 6px; }
+.widget-column::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 3px; }
+.widget-card { transition: transform 160ms cubic-bezier(.22,1,.36,1); }
+.widget-card:hover { transform: translateY(-1px); }
+@media (prefers-reduced-motion: reduce) { .widget-card { transition: none; } .widget-card:hover { transform: none; } }
 @media (prefers-reduced-motion: reduce) {
   .lock-screen, .mc-card { transition: none; }
   .lock-screen[data-leaving='true'] { transform: none; }

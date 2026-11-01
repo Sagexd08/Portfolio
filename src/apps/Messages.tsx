@@ -40,7 +40,10 @@ function Avatar({ chat, size }: { chat: Chat; size: number }) {
 }
 
 function Thread({ chat, reduced }: { chat: Chat; reduced: boolean }) {
-  const total = chat.messages.length;
+  const timeline = chat.messages.flatMap((text, i) => [{ me: true, text }, ...(chat.replies?.[i] ?? []).map((t) => ({ me: false, text: t }))]);
+  const total = timeline.length;
+  const endsTyping = chat.endsTyping !== false;
+  const lastMe = timeline.map((m) => m.me).lastIndexOf(true);
   // step 0..total = messages revealed; total + 1 = typing indicator shown
   const [step, setStep] = useState(reduced ? total + 1 : 0);
   const logRef = useRef<HTMLDivElement>(null);
@@ -65,20 +68,20 @@ function Thread({ chat, reduced }: { chat: Chat; reduced: boolean }) {
       role="log"
       aria-live="polite"
       aria-label={`Messages sent to ${chat.name}`}
-      className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto px-4 py-3"
+      className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto overflow-x-hidden px-4 py-3"
       style={{ background: '#fff' }}
     >
       <p className="mb-1 text-center text-[11px] text-neutral-500">
         <b className="font-semibold">iMessage</b> · {chat.time}
       </p>
-      {chat.messages.slice(0, shown).map((text, i) => (
+      {timeline.slice(0, shown).map((m, i) => (
         <div key={i} className="flex flex-col gap-1.5">
-          <div className={`im-bubble im-sent ${i === shown - 1 ? 'im-tail' : ''}`}>{text}</div>
+          <div className={`im-bubble ${m.me ? 'im-sent' : 'im-recv'} ${i === shown - 1 || timeline[i + 1]?.me !== m.me ? 'im-tail' : ''}`}>{m.text}</div>
+          {m.me && i === lastMe && done ? <p className="self-end pr-1 text-[11px] font-medium text-neutral-500">{chat.receipt}</p> : null}
         </div>
       ))}
       {done ? (
         <>
-          <p className="self-end pr-1 text-[11px] font-medium text-neutral-500">{chat.receipt}</p>
           <button
             type="button"
             onClick={() => openApp('contact')}
@@ -89,8 +92,8 @@ function Thread({ chat, reduced }: { chat: Chat; reduced: boolean }) {
           </button>
         </>
       ) : null}
-      {step > total ? (
-        <div className="im-bubble im-recv im-tail mt-1" role="img" aria-label={`${chat.name} is typing, but nobody has replied`}>
+      {step > total && endsTyping ? (
+        <div className="im-bubble im-recv im-tail mt-1" role="img" aria-label={`${chat.name} is typing`}>
           <span className="im-dot" />
           <span className="im-dot" />
           <span className="im-dot" />

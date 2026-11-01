@@ -1,4 +1,5 @@
-// SATIRE. Every message below is written by Sohom. Nobody replies; no real conversation, hire or relationship is implied.
+// PARODY. Messages are written by Sohom; any reply from a named person is a fictional joke written for this site, never
+// a real quote, and no real conversation, hire or relationship is implied.
 // Skill / project claims come only from src/content/portfolio.ts (Deloitte OCR, HackQuest scoring, Lumeo ML services,
 // Project Apex DB in Rust, LoRA/QLoRA fine-tuning, LangGraph/LangChain, GCP, explainable plant-disease detection).
 
@@ -14,13 +15,40 @@ export interface Chat {
   receipt: 'Delivered' | 'Read';
   /** Messages sent by Sohom; the last one carries the call to action. */
   messages: readonly string[];
+  /** Parody replies, keyed by the index of the Sohom message they follow. All fictional jokes, never real quotes. */
+  replies?: Readonly<Record<number, readonly string[]>>;
+  /** False when the thread ends with a real-looking back-and-forth and no endless typing bubble. */
+  endsTyping?: boolean;
 }
 
 const CTA = 'Fastest way to reach me is the Contact app below. Hire me?';
 
 export const CHATS: readonly Chat[] = [
   {
+    id: 'future-employer',
+    name: 'Your Future Employer',
+    subtitle: 'Imaginary. Could be you.',
+    initials: 'FE',
+    tint: ['#34d399', '#0f766e'],
+    time: 'Today',
+    receipt: 'Read',
+    endsTyping: false,
+    messages: [
+      'Hi! I saw your open role. I build production ML and I ship it with the customer.',
+      'OCR and document extraction at Deloitte, behavioral scoring at HackQuest, ML services for a live fintech platform at Lumeo, and a Rust database for agent memory.',
+      'I am based in Kolkata and looking for forward-deployed engineering and machine learning roles.',
+      'When can we talk?',
+    ],
+    replies: {
+      0: ['Hi Sohom! We were hoping to hear from you.'],
+      1: ['That is exactly what we need. Can you explain a model to a customer who is not technical?'],
+      2: ['Great. Send over your resume?'],
+      3: ['Perfect. Open the Contact app and we will take it from there.'],
+    },
+  },
+  {
     id: 'zuckerberg',
+    replies: { 0: ['Ha. A smaller GPU budget? Relatable.'], 3: ['Evaluate before you celebrate. Noted. Is this a pitch or a unit test?'] },
     name: 'Mark Zuckerberg',
     subtitle: 'Founder & CEO, Meta',
     initials: 'MZ',
@@ -37,6 +65,7 @@ export const CHATS: readonly Chat[] = [
   },
   {
     id: 'jensen',
+    replies: { 1: ['Free tiers are the best tier. Until the queue gets long.'], 3: ['Ship the model, then sit with the customer. Bold. I like it.'] },
     name: 'Jensen Huang',
     subtitle: 'Founder & CEO, NVIDIA',
     initials: 'JH',
@@ -53,6 +82,7 @@ export const CHATS: readonly Chat[] = [
   },
   {
     id: 'scott-wu',
+    replies: { 0: ['Parallelizing is overrated. Sleep is underrated.'], 3: ['Polite code review comments: the only kind that merge.'] },
     name: 'Scott Wu',
     subtitle: 'Co-founder & CEO, Cognition (Devin)',
     initials: 'SW',
@@ -69,6 +99,7 @@ export const CHATS: readonly Chat[] = [
   },
   {
     id: 'musk',
+    replies: { 2: ['Exactly once is a high bar. Even for rockets.'], 3: ['Summary: hire this person. Soon.'] },
     name: 'Elon Musk',
     subtitle: 'xAI · X · SpaceX · Tesla',
     initials: 'EM',
@@ -85,6 +116,7 @@ export const CHATS: readonly Chat[] = [
   },
   {
     id: 'altman',
+    replies: { 0: ['A model summarized the docs, then summarized the summary. Peak efficiency.'] },
     name: 'Sam Altman',
     subtitle: 'CEO, OpenAI',
     initials: 'SA',
@@ -100,6 +132,7 @@ export const CHATS: readonly Chat[] = [
   },
   {
     id: 'pichai',
+    replies: { 0: ['Circular but valid. Customer and applicant, same person. Respect.'], 2: ['Boring demos are the best demos.'] },
     name: 'Sundar Pichai',
     subtitle: 'CEO, Google and Alphabet',
     initials: 'SP',
@@ -115,6 +148,8 @@ export const CHATS: readonly Chat[] = [
   },
   {
     id: 'mom',
+    replies: { 0: ['Beta, did you eat? Send a photo.'], 1: ['Computers are fine. Just call your grandmother.'], 2: ['I am proud of you. I have already shown the neighbours. Sorry.'] },
+    endsTyping: false,
     name: 'Mom',
     subtitle: 'Home',
     initials: 'M',
@@ -130,4 +165,4 @@ export const CHATS: readonly Chat[] = [
   },
 ];
 
-export const SATIRE_NOTE = 'Satire: nobody has replied (yet). Not real conversations.';
+export const SATIRE_NOTE = 'Parody: replies from real people are fictional jokes. Not real conversations.';
