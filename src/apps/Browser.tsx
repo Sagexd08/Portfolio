@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from 'react';
 import { siGithub, siGooglechrome } from 'simple-icons';
 import { profile, projects } from '../content/portfolio';
+import { PLACES } from '../content/places';
+import { openApp } from '../desktop/store';
 import type { AppProps } from '../desktop/types';
 
 interface Tab {
@@ -91,6 +93,16 @@ function NewTabPage({ go }: { go: (url: string) => void }) {
           </li>
         ))}
       </ul>
+      <section aria-label="Places" className="w-full max-w-[560px]">
+        <h2 className="m-0 mb-2 text-center text-[11px] font-semibold uppercase" style={{ color: 'var(--muted)' }}>Places</h2>
+        <ul className="m-0 flex list-none flex-wrap justify-center gap-2 p-0">
+          {PLACES.map((p) => (
+            <li key={p.id}>
+              <button type="button" onClick={() => openApp('maps', { place: p.id })} className="row-hover rounded-full px-3 py-1 text-[12px]" style={{ border: '1px solid var(--hairline)' }}>{p.name}</button>
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }

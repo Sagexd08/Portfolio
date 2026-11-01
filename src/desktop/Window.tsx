@@ -26,7 +26,7 @@ interface Props {
 type Snap = 'left' | 'right' | 'top' | null;
 
 const DRAG_THRESHOLD = 5;
-const SNAP_EDGE = 8;
+const SNAP_EDGE = 24;
 const EXIT_MS = 200;
 const MIN_MS = 280;
 const ZOOM_MS = 340;
@@ -107,6 +107,11 @@ function WindowFrameImpl({ win, focused, mobile, toolbar }: Props) {
     const zone = snapZone(event.clientX, event.clientY);
     if (zone !== d.snap) { d.snap = zone; setSnap(zone); }
   };
+  const cancelDrag = (): void => {
+    drag.current = null;
+    if (frame.current) frame.current.style.transform = '';
+    setSnap(null);
+  };
   const endDrag = (event: ReactPointerEvent<HTMLElement>): void => {
     const d = drag.current;
     drag.current = null;
@@ -142,7 +147,7 @@ function WindowFrameImpl({ win, focused, mobile, toolbar }: Props) {
         onPointerDown={startDrag}
         onPointerMove={onDrag}
         onPointerUp={endDrag}
-        onPointerCancel={endDrag}
+        onPointerCancel={cancelDrag}
         onDoubleClick={zoom}
       >
         <div className="tl-group">

@@ -40,15 +40,15 @@ export function ResizeHandle({ win, edge }: { win: DesktopWindow; edge: Edge }) 
     if (!o) return;
     const dx = event.clientX - o.x;
     const dy = event.clientY - o.y;
-    const width = edge.includes('e') ? o.w + dx : edge.includes('w') ? Math.max(MIN_W, o.w - dx) : o.w;
-    const height = edge.includes('s') ? o.h + dy : edge.includes('n') ? Math.max(MIN_H, o.h - dy) : o.h;
+    const width = edge.includes('e') ? Math.max(MIN_W, o.w + dx) : edge.includes('w') ? Math.max(MIN_W, o.w - dx) : o.w;
+    const height = edge.includes('s') ? Math.max(MIN_H, o.h + dy) : edge.includes('n') ? Math.max(MIN_H, o.h - dy) : o.h;
     resizeWindow(win.id, { width, height });
     // West/north edges also move the origin so the opposite edge stays put.
     if (edge.includes('w') || edge.includes('n')) {
       moveWindow(win.id, { x: edge.includes('w') ? o.px + (o.w - width) : o.px, y: edge.includes('n') ? o.py + (o.h - height) : o.py });
     }
   };
-  return <div aria-hidden="true" style={{ position: 'absolute', cursor: CURSORS[edge], touchAction: 'none', ...placement(edge) }} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={() => (origin.current = null)} />;
+  return <div aria-hidden="true" style={{ position: 'absolute', cursor: CURSORS[edge], touchAction: 'none', ...placement(edge) }} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={() => (origin.current = null)} onPointerCancel={() => (origin.current = null)} />;
 }
 
 const GLYPHS: Record<string, string> = {
