@@ -61,6 +61,20 @@ export const GLYPHS_A = {
       </g>
     ),
   },
+  diary: {
+    bg: ['#ffcf6b', '#e0701c'],
+    draw: (p) => (
+      <g>
+        <defs><Grad id={`${p}a`} a="#fff6e0" b="#f3dba8" /></defs>
+        <g filter={`url(#${p}s)`}>
+          <rect x="24" y="16" width="52" height="68" rx="6" fill="#7a3b12" />
+          <rect x="29" y="16" width="47" height="68" rx="5" fill={`url(#${p}a)`} />
+          <path d="M38 34h30M38 44h30M38 54h22" stroke="rgba(120,70,20,.55)" strokeWidth="2.4" strokeLinecap="round" />
+          <path d="M60 16v22l5-4 5 4V16Z" fill="#e5383b" />
+        </g>
+      </g>
+    ),
+  },
   music: {
     bg: ['#ff6a8a', '#e60f3d'],
     draw: (p) => (

@@ -21,7 +21,8 @@ export type AppId =
   | 'music'
   | 'vscode'
   | 'terminal'
-  | 'messages';
+  | 'messages'
+  | 'diary';
 
 export interface AppProps {
   windowId: string;

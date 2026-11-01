@@ -7,9 +7,6 @@ const SKINS = ['#f1c9a5', '#cf9870', '#c68642', '#8d5524', '#5c3a21'];
 const HAIRS = ['#1b1613', '#4a2c17', '#a56b2a', '#d9b25f', '#7a7a7a'];
 const INK = '#1a1414';
 
-/** Crown curls: messy dark hair like the reference portrait. */
-const CURLS: [number, number][] = [[66, 54], [80, 41], [98, 35], [116, 39], [132, 48], [143, 66], [58, 72]];
-
 function Mascot({ style }: { style: MiniMeStyle }) {
   const uid = useId().replace(/[^a-zA-Z0-9]/g, '');
   const plaid = `plaid${uid}`;
@@ -37,7 +34,7 @@ function Mascot({ style }: { style: MiniMeStyle }) {
 
   const line = { stroke: INK, strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round' } as const;
   return (
-    <div ref={box} className="sage" role="img" aria-label="Sage, a cartoon mascot of Sohom with round glasses and curly hair, giving a thumbs up">
+    <div ref={box} className="sage" role="img" aria-label="Sage, a cartoon mascot of Sohom with thin round glasses and messy short hair, giving a thumbs up">
       <svg viewBox="0 0 200 200" width="100%" height="100%" aria-hidden="true">
         <defs>
           <pattern id={plaid} width="24" height="24" patternUnits="userSpaceOnUse">
@@ -69,18 +66,18 @@ function Mascot({ style }: { style: MiniMeStyle }) {
             <circle cx="140" cy="92" r="8.5" fill={style.skin} {...line} strokeWidth={3} />
             <ellipse cx="100" cy="86" rx="40" ry="44" fill={style.skin} {...line} />
             <path d="M128 78 l-6 10 M133 90 l-6 10 M130 102 l-5 8" stroke={INK} strokeWidth="1.8" strokeLinecap="round" opacity="0.28" />
-            {CURLS.map(([x, y], i) => <circle key={i} cx={x} cy={y} r="12" fill={style.hair} {...line} strokeWidth={3} />)}
-            <path d="M58 80 C52 52 70 36 100 36 C130 36 148 52 142 80 C137 62 125 58 113 62 C105 52 93 54 87 62 C75 58 63 64 58 80 Z" fill={style.hair} {...line} strokeWidth={3} />
-            <path d="M74 50 l8 -6 M92 44 l6 -4 M108 44 l7 -3 M124 52 l8 -2 M66 66 l6 -5" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" opacity="0.18" />
+            <path d="M56 86 C48 52 70 32 102 32 C134 32 152 54 144 86 C143 72 138 63 130 60 L124 69 L116 58 L108 68 L98 57 L90 68 L80 59 L72 70 L66 64 C60 70 57 78 56 86 Z" fill={style.hair} {...line} strokeWidth={3} />
+            <path d="M76 44 l12 -5 M96 38 l12 -2 M118 40 l12 4 M70 56 l6 -4 M132 54 l6 4" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" opacity="0.2" />
             <path d="M72 74 Q84 67 95 73 M105 73 Q116 67 128 74" fill="none" stroke={style.hair} strokeWidth="5" strokeLinecap="round" />
             <path d="M72 74 Q84 67 95 73 M105 73 Q116 67 128 74" fill="none" stroke={INK} strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
             <g className="sage-eyes">
               <circle cx="84" cy="93" r="3.4" fill={INK} />
               <circle cx="116" cy="93" r="3.4" fill={INK} />
             </g>
-            <circle cx="84" cy="93" r="15" fill="rgba(255,255,255,0.18)" stroke={INK} strokeWidth="3" />
-            <circle cx="116" cy="93" r="15" fill="rgba(255,255,255,0.18)" stroke={INK} strokeWidth="3" />
-            <path d="M99 91 Q100 88 101 91 M69 90 L58 86 M131 90 L142 86" fill="none" stroke={INK} strokeWidth="3" strokeLinecap="round" />
+            <ellipse cx="84" cy="93" rx="14" ry="12.5" fill="rgba(255,255,255,0.14)" stroke="#2b2b30" strokeWidth="2.2" />
+            <ellipse cx="116" cy="93" rx="14" ry="12.5" fill="rgba(255,255,255,0.14)" stroke="#2b2b30" strokeWidth="2.2" />
+            <path d="M80 88 q4 -3 8 -1 M112 88 q4 -3 8 -1" fill="none" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" opacity="0.55" />
+            <path d="M98 91 Q100 89 102 91 M70 91 L60 88 M130 91 L140 88" fill="none" stroke="#2b2b30" strokeWidth="2.2" strokeLinecap="round" />
             <path d="M100 99 Q96 107 101 109" fill="none" stroke={INK} strokeWidth="2.4" strokeLinecap="round" opacity="0.7" />
             <path d="M86 115 Q100 128 114 115" fill="#fff" stroke={INK} strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" />
             <circle cx="73" cy="109" r="6" fill="#ff6b6b" opacity="0.28" />

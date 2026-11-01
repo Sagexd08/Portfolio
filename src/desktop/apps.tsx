@@ -26,4 +26,5 @@ export const APP_COMPONENTS: Record<AppId, AppComponent> = {
   vscode: lazy(() => import('../apps/VSCode')),
   terminal: lazy(() => import('../apps/Terminal')),
   messages: lazy(() => import('../apps/Messages')),
+  diary: lazy(() => import('../apps/Diary')),
 };

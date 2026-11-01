@@ -29,10 +29,11 @@ export const APP_META: Record<AppId, AppMeta> = {
   music: { title: 'Music', path: '/music', width: 760, height: 560, description: 'A lofi playlist player powered by YouTube embeds.' },
   vscode: { title: 'VS Code', path: '/vscode', width: 980, height: 620, description: 'Browse Sohom’s portfolio as a read-only VS Code workspace.' },
   terminal: { title: 'Terminal', path: '/terminal', width: 720, height: 460, description: 'A tiny simulated shell with portfolio commands.' },
+  diary: { title: 'Diary', path: '/diary', width: 900, height: 620, description: 'A digital diary: how I got here, what I watch, read and tinker with.' },
   messages: { title: 'Messages', path: '/messages', width: 820, height: 560, description: 'Satirical iMessage-style pitches. Nobody has replied (yet).' },
 };
 
-export const DOCK_ORDER: AppId[] = ['finder', 'notes', 'about', 'projects', 'resume', 'open-source', 'maps', 'gallery', 'assistant', 'browser', 'linkedin', 'music', 'vscode', 'terminal', 'messages', 'contact'];
+export const DOCK_ORDER: AppId[] = ['finder', 'notes', 'about', 'projects', 'resume', 'open-source', 'maps', 'gallery', 'assistant', 'browser', 'linkedin', 'music', 'vscode', 'terminal', 'messages', 'diary', 'contact'];
 
 /** Apps shown in Launchpad and Spotlight (hidden easter-egg apps are excluded). */
 export const LAUNCHABLE: AppId[] = [...DOCK_ORDER, 'snake', 'help'];
