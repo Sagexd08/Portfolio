@@ -48,7 +48,9 @@ export function TerminalView({ palette = PALETTES.purple, className, onTheme, au
   const input = useRef<HTMLInputElement>(null);
   const end = useRef<HTMLDivElement>(null);
 
-  useEffect(() => end.current?.scrollIntoView({ block: 'end' }), [lines]);
+  useEffect(() => {
+    end.current?.scrollIntoView({ block: 'end' });
+  }, [lines]);
   useEffect(() => {
     if (autoFocus) input.current?.focus();
   }, [autoFocus]);

@@ -22,7 +22,9 @@ export function Palette({ placeholder, prefix = '', items, onClose }: Props) {
   const [query, setQuery] = useState(prefix);
   const [active, setActive] = useState(0);
   const input = useRef<HTMLInputElement>(null);
-  useEffect(() => input.current?.focus(), []);
+  useEffect(() => {
+    input.current?.focus();
+  }, []);
 
   const needle = query.startsWith('>') ? query.slice(1).trim() : query.trim();
   const shown = useMemo(() => {

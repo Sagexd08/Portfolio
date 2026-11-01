@@ -86,7 +86,9 @@ export default function VSCode(_props: AppProps) {
   const [mode, setMode] = useState<PaletteMode>(null);
   const root = useRef<HTMLDivElement>(null);
 
-  useEffect(() => root.current?.focus(), []);
+  useEffect(() => {
+    root.current?.focus();
+  }, []);
 
   const open = useCallback((path: string): void => {
     setTabs((t) => (t.includes(path) ? t : [...t, path]));
