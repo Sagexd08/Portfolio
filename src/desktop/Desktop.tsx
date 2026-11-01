@@ -85,7 +85,7 @@ function tileFirstLoad(): void {
   const rightW = right - left - TILE_GAP - leftW;
   const topH = Math.floor((height - TILE_GAP) * 0.58);
   openApp('vscode');
-  openApp('terminal');
+  openApp('terminal', { initialCommand: 'neofetch' });
   openApp('notes');
   const place = (id: string, x: number, y: number, width: number, hh: number): void => {
     resizeWindow(id, { width, height: hh });

@@ -364,3 +364,8 @@ button {
     transition: none;
   }
 }
+
+/* VS Code Explorer rows: no default outline; a subtle inset focus ring for keyboard focus only. */
+.vsc-row { border: 0; outline: none; }
+.vsc-row:hover:not([aria-selected='true']) { background: #37373d; }
+.vsc-row:focus-visible { outline: 1px solid #0078d4; outline-offset: -1px; }

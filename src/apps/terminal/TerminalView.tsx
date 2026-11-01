@@ -29,12 +29,19 @@ interface Props {
   onTheme?: (theme: ThemeName) => void;
   autoFocus?: boolean;
   label?: string;
+  /** Command to auto-run once on mount, e.g. 'neofetch'. */
+  initialCommand?: string;
 }
 
-export function TerminalView({ palette = PALETTES.purple, className, onTheme, autoFocus, label = 'Terminal' }: Props) {
+export function TerminalView({ palette = PALETTES.purple, className, onTheme, autoFocus, label = 'Terminal', initialCommand }: Props) {
   const nextId = useRef(0);
   const mk = (text: string, isCommand?: boolean): Line => ({ id: nextId.current++, text, isCommand });
-  const [lines, setLines] = useState<Line[]>(() => WELCOME.map((t) => mk(t)));
+  const [lines, setLines] = useState<Line[]>(() => {
+    const base = WELCOME.map((t) => mk(t));
+    if (!initialCommand) return base;
+    const r = run(initialCommand, { history: [initialCommand], setTheme: () => undefined });
+    return 'then' in r || !r.output ? base : [...base, mk(`${PROMPT} ${initialCommand}`, true), ...r.output.map((t) => mk(t))];
+  });
   const [value, setValue] = useState('');
   const [history, setHistory] = useState<string[]>([]);
   const [cursor, setCursor] = useState<number | null>(null);
@@ -47,12 +54,20 @@ export function TerminalView({ palette = PALETTES.purple, className, onTheme, au
   }, [autoFocus]);
 
   const submit = (): void => {
-    const nextHistory = value.trim() ? [...history, value] : history;
-    const result = run(value, { history: nextHistory, setTheme: (t) => onTheme?.(t) });
+    const command = value;
+    const nextHistory = command.trim() ? [...history, command] : history;
     setHistory(nextHistory);
     setCursor(null);
     setValue('');
-    setLines((prev) => (result.output ? [...prev, mk(`${PROMPT} ${value}`, true), ...result.output.map((t) => mk(t))] : []));
+    const result = run(command, { history: nextHistory, setTheme: (t) => onTheme?.(t) });
+    const echo = mk(`${PROMPT} ${command}`, true);
+    if ('then' in result) {
+      const pending = mk('Searching the portfolio...');
+      setLines((prev) => [...prev, echo, pending]);
+      void result.then((r) => setLines((prev) => [...prev.filter((l) => l.id !== pending.id), ...(r.output ?? []).map((t) => mk(t))]));
+    } else {
+      setLines((prev) => (result.output ? [...prev, echo, ...result.output.map((t) => mk(t))] : []));
+    }
   };
 
   const recall = (delta: -1 | 1): void => {
@@ -70,7 +85,7 @@ export function TerminalView({ palette = PALETTES.purple, className, onTheme, au
     else if (e.key === 'Tab') {
       e.preventDefault();
       const done = complete(value);
-      if (done) setValue(`${done} `);
+      if (done) setValue(done);
     } else if (e.key === 'l' && e.ctrlKey) { e.preventDefault(); setLines([]); }
     e.stopPropagation();
   };

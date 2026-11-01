@@ -19,10 +19,8 @@ function Row({ node, depth, active, onOpen }: { node: TreeNode; depth: number; a
         aria-expanded={isDir ? open : undefined}
         aria-selected={selected}
         onClick={() => (isDir ? setOpen(!open) : onOpen(node.path))}
-        className="flex h-[22px] w-full items-center gap-1.5 text-left text-[13px] outline-none focus-visible:outline focus-visible:outline-1 focus-visible:-outline-offset-1"
-        style={{ paddingLeft: 8 + depth * 12, background: selected ? C.listActive : undefined, color: selected ? '#fff' : C.editorFg, outlineColor: C.accent }}
-        onMouseEnter={(e) => { if (!selected) e.currentTarget.style.background = C.listHover; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = selected ? C.listActive : ''; }}
+        className="vsc-row flex h-[22px] w-full items-center gap-1.5 text-left text-[13px]"
+        style={{ paddingLeft: 8 + depth * 12, background: selected ? C.listActive : undefined, color: selected ? '#fff' : C.editorFg }}
       >
         <span aria-hidden="true" className="w-3 flex-none text-center text-[10px]" style={{ color: C.muted }}>{isDir ? (open ? '▾' : '▸') : ''}</span>
         <span aria-hidden="true" className="mono flex-none text-[9px] font-bold" style={{ color: isDir ? C.muted : FILE_COLOR[ext] ?? C.muted }}>{isDir ? '■' : ext === 'md' ? 'M↓' : ext === 'json' ? '{}' : 'TS'}</span>

@@ -3,7 +3,7 @@ import type { AppProps } from '../desktop/types';
 import { PALETTES, TerminalView } from './terminal/TerminalView';
 import type { ThemeName } from './terminal/engine';
 
-export default function Terminal(_props: AppProps) {
+export default function Terminal({ params }: AppProps) {
   const [theme, setTheme] = useState<ThemeName>('purple');
-  return <TerminalView palette={PALETTES[theme]} onTheme={setTheme} autoFocus />;
+  return <TerminalView palette={PALETTES[theme]} onTheme={setTheme} autoFocus initialCommand={params.initialCommand} />;
 }
