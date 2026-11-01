@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { closeOverlay, openOverlay, useDismiss, useOverlay } from './overlays';
 import { setPrefs, usePrefs, WALLPAPERS, type Theme } from './prefs';
+import { PHOTOS } from './wallpapers';
 
 const THEMES: { key: Theme; label: string }[] = [
   { key: 'auto', label: 'Auto' },
@@ -49,6 +50,9 @@ export function ControlCenter() {
             </button>
           ))}
         </div>
+        {PHOTOS.find((p) => p.key === prefs.wallpaper) && (
+          <p className="m-0 mt-2 text-[11px]" style={{ color: 'var(--muted)' }}>{PHOTOS.find((p) => p.key === prefs.wallpaper)?.credit}</p>
+        )}
       </div>
       <Toggle label="Do Not Disturb" hint="Silence pop-up notifications" on={prefs.dnd} onChange={(value) => setPrefs({ dnd: value })} />
       <Toggle label="Reduce Motion" hint="Turn off window and dock animation" on={prefs.reduceMotion} onChange={(value) => setPrefs({ reduceMotion: value })} />

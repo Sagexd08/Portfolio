@@ -10,6 +10,7 @@ import { Launchpad } from './Launchpad';
 import { notify, seedNotices } from './notify';
 import { NotificationCenter, Toasts } from './NotificationCenter';
 import { toggleOverlay } from './overlays';
+import { Wallpaper } from './Wallpaper';
 import { initPrefs } from './prefs';
 import { Spotlight } from './Spotlight';
 import { Eggs } from './Eggs';
@@ -126,7 +127,7 @@ export default function Desktop() {
 
   return (
     <div className="fixed inset-0 overflow-hidden">
-      <div className="wallpaper" aria-hidden="true" />
+      <Wallpaper />
       <MenuBar mobile={mobile} />
       <main aria-label="Desktop">
         <h1 className="sr-only" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>

@@ -8,6 +8,12 @@
         "value": "dock-bounce",
         "createdAt": "2026-10-31T18:23:07.265Z",
         "reason": "PRD section 6.1 in the user's pasted spec requires a subtle bounce on app open; single 10px hop, disabled under prefers-reduced-motion"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "im-bounce",
+        "createdAt": "2026-11-01T07:51:30.018Z",
+        "reason": "Claude: iMessage typing indicator dots literally bounce; ease-in-out 4px offset, domain-appropriate motion, not the user's call"
       }
     ]
   }

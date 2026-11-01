@@ -25,6 +25,9 @@ const TILES: Record<AppId, Stop> = {
   browser: ['#f6f7fb', '#c9d1e0'],
   linkedin: ['#3b95d9', '#0a5ea8'],
   music: ['#ff2d2d', '#d10a0a'],
+  vscode: ['#1f2a44', '#0f1626'],
+  terminal: ['#3a3a3c', '#111112'],
+  messages: ['#6cea7a', '#1fb53a'],
 };
 
 const STROKE = { fill: 'none', stroke: '#fff', strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round' } as const;
@@ -54,6 +57,17 @@ const GLYPHS: Record<AppId, ReactNode> = {
     </g>
   ),
   music: <path d={siYoutubemusic.path} fill="#fff" />,
+  // simple-icons no longer ships a VS Code mark, so this is an original ribbon-style glyph.
+  vscode: (
+    <g>
+      <path d="M17.5 3.5 8.2 12l9.3 8.5 3-1.4V4.9z" fill="#2aa7f5" />
+      <path d="M17.5 3.5 8.2 12l-3.6-3-1.6 1.2v3.6l1.6 1.2 3.6-3 9.3 8.5V3.5z" fill="#0b78d4" opacity=".9" />
+      <path d="M17.5 8.2v7.6L12.6 12z" fill="#0f1626" opacity=".55" />
+    </g>
+  ),
+  terminal: <g {...STROKE}><path d="m5.5 8.5 4 3.5-4 3.5M12 16h6" /></g>,
+  // Original filled speech bubble (green squircle tile above).
+  messages: <path d="M12 4.2c-4.7 0-8.5 3-8.5 6.8 0 2.1 1.2 4 3.1 5.2-.1 1.1-.6 2.2-1.4 3 1.7-.1 3.2-.8 4.2-1.7.8.2 1.7.3 2.6.3 4.7 0 8.5-3 8.5-6.8S16.7 4.2 12 4.2z" fill="#fff" />,
 };
 
 function AppIcon({ app }: { app: AppId }) {

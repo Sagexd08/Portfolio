@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { DEFAULT_WALLPAPER, isPhoto, PHOTOS } from './wallpapers';
 
 export type Theme = 'auto' | 'light' | 'dark';
 export interface Prefs {
@@ -9,6 +10,7 @@ export interface Prefs {
 }
 
 export const WALLPAPERS: { key: string; label: string }[] = [
+  ...PHOTOS.map(({ key, label }) => ({ key, label })),
   { key: 'sonoma', label: 'Sonoma' },
   { key: 'sequoia', label: 'Sequoia' },
   { key: 'monterey', label: 'Monterey' },
@@ -17,7 +19,7 @@ export const WALLPAPERS: { key: string; label: string }[] = [
 ];
 
 const KEY = 'portfolio.prefs.v1';
-const DEFAULTS: Prefs = { theme: 'auto', dnd: false, reduceMotion: false, wallpaper: 'sonoma' };
+const DEFAULTS: Prefs = { theme: 'auto', dnd: false, reduceMotion: false, wallpaper: DEFAULT_WALLPAPER };
 
 function read(): Prefs {
   try {
@@ -37,6 +39,7 @@ function apply(prefs: Prefs): void {
   else root.setAttribute('data-theme', prefs.theme);
   root.toggleAttribute('data-reduce-motion', prefs.reduceMotion);
   root.setAttribute('data-wallpaper', prefs.wallpaper);
+  root.setAttribute('data-wallpaper-kind', isPhoto(prefs.wallpaper) ? 'photo' : 'gradient');
 }
 
 export function initPrefs(): void {

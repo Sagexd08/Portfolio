@@ -18,7 +18,10 @@ export type AppId =
   | 'embeddings'
   | 'browser'
   | 'linkedin'
-  | 'music';
+  | 'music'
+  | 'vscode'
+  | 'terminal'
+  | 'messages';
 
 export interface AppProps {
   windowId: string;

@@ -23,4 +23,7 @@ export const APP_COMPONENTS: Record<AppId, AppComponent> = {
   browser: lazy(() => import('../apps/Browser')),
   linkedin: lazy(() => import('../apps/LinkedIn')),
   music: lazy(() => import('../apps/Music')),
+  vscode: lazy(() => import('../apps/VSCode')),
+  terminal: lazy(() => import('../apps/Terminal')),
+  messages: lazy(() => import('../apps/Messages')),
 };
